@@ -1,5 +1,6 @@
 "use client";
 
+import getDataAPI from "@/lib/valapi";
 import getAgents from "@/lib/valapi";
 import { useEffect, useState } from "react";
 
@@ -9,7 +10,7 @@ export default function Home() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const response = await getAgents();
+        const response = await getDataAPI("agents");
         setAgents(response.data);
         console.log(response.data);
       } catch (error) {
@@ -21,12 +22,14 @@ export default function Home() {
 
   return (
     <div>
-      <h1>Valorant Agents</h1>
+      {/* <h1>Valorant Agents</h1>
       <ul>
         {agents.map((agent) => (
           <li key={agent.uuid}>{agent.displayName}</li>
         ))}
-      </ul>
+      </ul> */}
+
+
     </div>
   );
 }
