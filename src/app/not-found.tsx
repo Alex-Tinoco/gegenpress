@@ -2,7 +2,7 @@
 
 export default function NotFound() {
     return (
-        <div>
+        <div className="p-[]">
             Not Found
         </div>
     );
