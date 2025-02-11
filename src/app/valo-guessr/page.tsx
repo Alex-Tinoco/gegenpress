@@ -1,5 +1,5 @@
 
-export default async function HomePage() {
+export default async function ValoMainPage() {
     return (
         <div>
             Valorant
