@@ -1,14 +1,17 @@
 "use client";
-import { createUser } from "@/lib/auth/auth";
-import { EyeDropperIcon, EyeIcon, EyeSlashIcon } from "@heroicons/react/24/solid";
+
+import {
+  EyeDropperIcon,
+  EyeIcon,
+  EyeSlashIcon,
+} from "@heroicons/react/24/solid";
 import { Account } from "@models/authmodel";
 import Link from "next/link";
-import { FormEvent, MouseEventHandler, useEffect, useState } from "react";
-
+import { FormEvent, useState } from "react";
 
 export default function Login() {
-  const[passwordVisibility, setPasswordVisibility] = useState(true);
-  const[passwordType, setPasswordType] = useState("password");
+  const [passwordVisibility, setPasswordVisibility] = useState(true);
+  const [passwordType, setPasswordType] = useState("password");
   const [formData, setFormData] = useState<Account>({
     name: "",
     email: "",
@@ -18,7 +21,9 @@ export default function Login() {
 
   const togglePasswordVisibility = () => {
     setPasswordVisibility((prevVisibility) => !prevVisibility);
-    setPasswordType((prevType) => (prevType === "password" ? "text" : "password"));
+    setPasswordType((prevType) =>
+      prevType === "password" ? "text" : "password",
+    );
   };
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -27,7 +32,6 @@ export default function Login() {
       [name]: value,
     }));
   };
-
 
   const validation = () => {
     const errors: Partial<Account> = {};
@@ -43,23 +47,34 @@ export default function Login() {
     }
     setErrors(errors);
     return Object.keys(errors).length === 0;
-  }
-  
+  };
 
-
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
-      let isValid = validation();
-      if (isValid) {
-       createUser(formData);
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    let isValid = validation();
+    if (isValid) {
+      const response = await fetch("/api/account", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          action: "createAccount",
+          data: formData,
+        }),
+      });
+      if (response.ok) {
+        console.log("User created");
       } else {
-        return;
+        const data = await response.json();
+        console.error("Error creating user:", data.error);
       }
+    }
   };
 
   return (
     <div className="flex h-screen w-full items-center justify-center">
-      <div className="flex w-1/2 flex-col items-center justify-center gap-5">
+      <div className="flex w-2/3 flex-col items-center justify-center gap-5 md:w-1/2">
         <h1 className="text-4xl font-bold">Get Started</h1>
         <div className="flex w-full flex-col items-center justify-center gap-3">
           <button className="flex w-full items-center justify-center gap-2 rounded-md border-1 border-gray-300 py-3 hover:bg-gray-100">
@@ -78,37 +93,57 @@ export default function Login() {
         </div>
         <form className="flex w-full flex-col gap-3" onSubmit={handleSubmit}>
           <div className="flex flex-col gap-2">
-            <label className="text-s translate-x-1">Email <span className="text-red-600">*</span>
+            <label className="text-s translate-x-1">
+              Email <span className="text-red-600">*</span>
             </label>
             <input
               type="text"
               placeholder="Jack@mail.com"
-              className="w-full rounded-md border-1 border-gray-300 p-2 text-sm focus:border-indigo-500"
+              className="w-full rounded-md border-1 border-gray-300 p-2 text-sm hover:bg-gray-100 focus:border-indigo-500"
               onChange={handleChange}
               name="email"
-              
             />
-            {errors.email && <p className="text-s translate-x-1 text-red-500">{errors.email}</p>}
+            {errors.email && (
+              <p className="text-s translate-x-1 text-red-500">
+                {errors.email}
+              </p>
+            )}
           </div>
-        
+
           <div className="flex flex-col gap-2">
-            <label className="translate-x-1 text-s">Password <span className="text-red-600">*</span></label>
+            <label className="text-s translate-x-1">
+              Password <span className="text-red-600">*</span>
+            </label>
             <div className="flex flex-row items-center justify-center gap-1.5">
               <input
                 type={passwordType}
                 placeholder="8+ characters required"
-                className="w-full rounded-md border-1 border-gray-300 p-2 text-sm focus:border-indigo-500"
+                className="w-full rounded-md border-1 border-gray-300 p-2 text-sm hover:bg-gray-100 focus:border-indigo-500"
                 onChange={handleChange}
                 name="password"
               />
               <div onClick={togglePasswordVisibility}>
-                {passwordVisibility? <EyeIcon className="h-9 rounded-md border-1 border-gray-300 p-1 text-gray-300 hover:bg-gray-100 cursor-pointer" /> : <EyeSlashIcon className="h-9 rounded-md border-1 border-gray-300 p-1 text-gray-300 hover:bg-gray-100 cursor-pointer" />}
+                {passwordVisibility ? (
+                  <EyeIcon className="h-9 cursor-pointer rounded-md border-1 border-gray-300 p-1 text-gray-300 hover:bg-gray-100" />
+                ) : (
+                  <EyeSlashIcon className="h-9 cursor-pointer rounded-md border-1 border-gray-300 p-1 text-gray-300 hover:bg-gray-100" />
+                )}
               </div>
             </div>
-            {errors.password && <p className="text-s translate-x-1 text-red-500">{errors.password}</p>}
+            {errors.password && (
+              <p className="text-s translate-x-1 text-red-500">
+                {errors.password}
+              </p>
+            )}
           </div>
-          <Link href={"/"} className="text-right text-s underline"> I forgot my password</Link>
-          <button type="submit" className="flex w-full items-center justify-center rounded-md border-2 bg-indigo-500 py-2 text-white hover:bg-indigo-600 cursor-pointer">
+          <span className="text-s text-right underline">
+            <Link href={"/"}>I forgot my password</Link>
+          </span>
+
+          <button
+            type="submit"
+            className="flex w-full cursor-pointer items-center justify-center rounded-md border-2 bg-indigo-500 py-2 text-white hover:bg-indigo-600"
+          >
             Sign in or create account
           </button>
         </form>
