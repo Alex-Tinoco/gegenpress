@@ -5,7 +5,7 @@ import { Account } from '@models/authmodel';
 
 type PrismaTransactionClient = Omit<typeof PrismaClient, "$connect" | "$disconnect" | "$on" | "$transaction" | "$use">
 
-async function createUser(data: Account) {
+export async function createUser(data: Account) {
 
 const hashedPassword = await bcrypt.hash(data.password, 10);
 
