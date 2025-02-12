@@ -1,7 +1,7 @@
 import Login from "@/components/auth/login";
 import HeroImage from "@/components/auth/heroimage";
 
-export default async function AuthenticationPage() {
+export default function AuthenticationPage() {
   return (
     <div className="flex h-screen w-full flex-row">
       <div className="w-full md:w-1/2">

@@ -152,7 +152,7 @@ export default function Login() {
             type="submit"
             className="flex w-full cursor-pointer items-center justify-center rounded-md border-2 bg-indigo-500 py-2 text-white hover:bg-indigo-600"
           >
-            Sign in or create account
+            Sign in or register
           </button>
         </form>
       </div>
