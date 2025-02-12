@@ -1,7 +1,7 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 import { Account } from "@models/authmodel";
-import bcrypt from "bcrypt";
+const bcrypt = require("bcryptjs");
 
 type PrismaTransactionClient = Omit<
   typeof PrismaClient,
@@ -9,8 +9,8 @@ type PrismaTransactionClient = Omit<
 >;
 
 export async function createAccount(data: Account) {
-  const hashedPassword = await bcrypt.hash(data.password, 10);
   await prisma.$transaction(async (prisma: PrismaTransactionClient) => {
+    const hashedPassword = await bcrypt.hash(data.password, 10);
     await prisma.user.create({
       data: {
         name: data.name,
@@ -27,5 +27,31 @@ export async function createAccount(data: Account) {
         },
       },
     });
+  });
+}
+
+export async function findUserByEmail(email: string) {
+  return await prisma.user.findUnique({
+    where: {
+      email: email,
+    },
+    select: {
+      id: true,
+    },
+  });
+}
+
+export async function retrievePassword(id: string) {
+  return await prisma.user.findUnique({
+    where: {
+      id,
+    },
+    select: {
+      password: {
+        select: {
+          hash: true,
+        },
+      },
+    },
   });
 }

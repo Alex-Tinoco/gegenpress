@@ -1,46 +1,53 @@
-import { createAccount } from "@/lib/auth/account";
+import {
+  createAccount,
+  findUserByEmail,
+  retrievePassword,
+} from "@/lib/auth/account";
 import { NextApiRequest, NextApiResponse } from "next";
+const bcrypt = require("bcryptjs");
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
-  const { method } = req;
+  const { action, data } = req.body;
+  const hashedPassword = await bcrypt.hash(data.password, 10);
 
-  switch (method) {
-    case "POST":
-      const { action, data } = req.body;
-
-      switch (action) {
-        case "createAccount":
+  switch (action) {
+    case "checkAccount":
+      try {
+        const user = await findUserByEmail(data.email);
+        if (user) {
+          //if user exists, check if password is correct
           try {
-            console.log(data);
-            const user = await createAccount(data);
-            res.status(200).json(user);
+            const password = await retrievePassword(user.id);
+            if (await bcrypt.compare(data.password, password.password.hash)) {
+              return res.status(200);
+            }
           } catch (error) {
-            res.status(500).json({ error });
+            return res.status(401);
           }
-          break;
+        } else {
+          //if user doesn't exist, create session with password
+          return res.status(202);
+        }
+      } catch (error) {
+        res.status(500).json({ error: "Error while checking account" });
+      }
+      break;
 
-        // case "login":
-        //   try {
-        //     const user = await login(email, password);
-        //     res.status(200).json(user);
-        //   } catch (error) {
-        //     res.status(401).json({ error: error.message });
-        //   }
-        //   break;
-
-        default:
-          res.setHeader("Allow", ["POST"]);
-          res.status(405).end(`Method ${method} Not Allowed`);
-          break;
+    case "createAccount":
+      try {
+        const user = await createAccount(data);
+        res.status(200).json(user);
+      } catch (error) {
+        res.status(500).json({ error });
       }
       break;
 
     default:
       res.setHeader("Allow", ["POST"]);
-      res.status(405).end(`Method ${method} Not Allowed`);
+      res.status(405).end(`Action Not Allowed`);
       break;
   }
 }

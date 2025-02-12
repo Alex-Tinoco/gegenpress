@@ -23,9 +23,10 @@ model Password {
 }
 
 model OldPassword {
-  id      Int      @id @default(autoincrement())
+  id      String      @id @default(uuid())
   hash    String
   addedAt DateTime @default(now())
   user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId  String
 }
+

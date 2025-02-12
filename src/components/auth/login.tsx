@@ -1,12 +1,9 @@
 "use client";
 
-import {
-  EyeDropperIcon,
-  EyeIcon,
-  EyeSlashIcon,
-} from "@heroicons/react/24/solid";
+import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/solid";
 import { Account } from "@models/authmodel";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 
 export default function Login() {
@@ -59,15 +56,26 @@ export default function Login() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          action: "createAccount",
+          action: "checkAccount",
           data: formData,
         }),
       });
-      if (response.ok) {
-        console.log("User created");
-      } else {
-        const data = await response.json();
-        console.error("Error creating user:", data.error);
+      const data = await response.json();
+      switch (response.status) {
+        case 200:
+          console.log("User created successfully");
+          useRouter().push("/");
+          break;
+        case 401:
+          console.error("Unauthorized: Invalid password");
+          break;
+        // Account creation:
+        case 202:
+          console.log("No user found. Please create an account:");
+          break;
+        default:
+          console.error("Error creating user:", data.error);
+          break;
       }
     }
   };
@@ -99,7 +107,7 @@ export default function Login() {
             <input
               type="text"
               placeholder="Jack@mail.com"
-              className="w-full rounded-md border-1 border-gray-300 p-2 text-sm hover:bg-gray-100 focus:border-indigo-500"
+              className={`w-full rounded-md border-1 border-gray-300 p-2 text-sm hover:bg-gray-100 focus:border-indigo-500${errors.email && "border-1 border-red-500"}`}
               onChange={handleChange}
               name="email"
             />
@@ -118,7 +126,7 @@ export default function Login() {
               <input
                 type={passwordType}
                 placeholder="8+ characters required"
-                className="w-full rounded-md border-1 border-gray-300 p-2 text-sm hover:bg-gray-100 focus:border-indigo-500"
+                className={`w-full rounded-md border-1 border-gray-300 p-2 text-sm hover:bg-gray-100 focus:border-indigo-500${errors.password && "border-1 border-red-500"}`}
                 onChange={handleChange}
                 name="password"
               />
