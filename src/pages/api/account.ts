@@ -11,7 +11,6 @@ export default async function handler(
   res: NextApiResponse,
 ) {
   const { action, data } = req.body;
-  const hashedPassword = await bcrypt.hash(data.password, 10);
 
   switch (action) {
     case "checkAccount":
@@ -28,7 +27,6 @@ export default async function handler(
             return res.status(401);
           }
         } else {
-          //if user doesn't exist, create session with password
           return res.status(202);
         }
       } catch (error) {
@@ -38,8 +36,9 @@ export default async function handler(
 
     case "createAccount":
       try {
+        console.log(data);
         const user = await createAccount(data);
-        res.status(200).json(user);
+        res.status(200).json({ user });
       } catch (error) {
         res.status(500).json({ error });
       }

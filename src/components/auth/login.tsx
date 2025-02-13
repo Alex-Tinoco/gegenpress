@@ -48,7 +48,7 @@ export default function Login() {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    let isValid = validation();
+    const isValid = validation();
     if (isValid) {
       const response = await fetch("/api/account", {
         method: "POST",
@@ -106,7 +106,7 @@ export default function Login() {
             </label>
             <input
               type="text"
-              placeholder="Jack@mail.com"
+              placeholder="Enter your email"
               className={`w-full rounded-md border-1 border-gray-300 p-2 text-sm hover:bg-gray-100 focus:border-indigo-500${errors.email && "border-1 border-red-500"}`}
               onChange={handleChange}
               name="email"
@@ -125,7 +125,7 @@ export default function Login() {
             <div className="flex flex-row items-center justify-center gap-1.5">
               <input
                 type={passwordType}
-                placeholder="8+ characters required"
+                placeholder="Enter your password"
                 className={`w-full rounded-md border-1 border-gray-300 p-2 text-sm hover:bg-gray-100 focus:border-indigo-500${errors.password && "border-1 border-red-500"}`}
                 onChange={handleChange}
                 name="password"
