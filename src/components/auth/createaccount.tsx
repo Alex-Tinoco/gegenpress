@@ -1,5 +1,6 @@
 import { createAccount } from "@/lib/auth/account";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/solid";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { FormEvent, useEffect, useState } from "react";
 
@@ -72,7 +73,8 @@ export const CreateAccount: React.FC<Props> = ({ email }) => {
     e.preventDefault();
     const isValid = validation();
     if (isValid) {
-      delete formData.passwordrepeat;
+      const dataToSend = formData
+      delete dataToSend.passwordrepeat;
       const response = await fetch("/api/account", {
         method: "POST",
         headers: {
@@ -80,7 +82,7 @@ export const CreateAccount: React.FC<Props> = ({ email }) => {
         },
         body: JSON.stringify({
           action: "createAccount",
-          data: formData,
+          data: dataToSend,
         }),
       });
       const data = await response.json();
@@ -194,6 +196,7 @@ export const CreateAccount: React.FC<Props> = ({ email }) => {
             Sign in or create account
           </button>
         </form>
+        <span className="self-end flex gap-2">Already have an account ? <Link href="/auth" className="underline text-indigo-600">Go to login page</Link></span>
       </div>
     </div>
   );

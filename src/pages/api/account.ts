@@ -17,36 +17,46 @@ export default async function handler(
       try {
         const user = await findUserByEmail(data.email);
         if (user) {
-          //if user exists, check if password is correct
           try {
             const password = await retrievePassword(user.id);
             if (await bcrypt.compare(data.password, password.password.hash)) {
-              return res.status(200);
+              res.status(200).end();
+            } else {
+              res.status(401).end();
             }
           } catch (error) {
-            return res.status(401);
+            res.status(401).end();
           }
         } else {
-          return res.status(202);
+          res.status(202).end();
         }
       } catch (error) {
-        res.status(500).json({ error: "Error while checking account" });
+        res.status(500).end();
       }
       break;
 
     case "createAccount":
       try {
-        console.log(data);
-        const user = await createAccount(data);
-        res.status(200).json({ user });
-      } catch (error) {
-        res.status(500).json({ error });
+        const user = await findUserByEmail(data.email);
+        console.log(user);
+        if (!user) {
+        try {
+          await createAccount(data);
+          res.status(200).end();
+        } catch (error) {
+          res.status(500).end();
+        }
+      } else {
+        res.status(500).json("Account already exists");
       }
+    } catch (error) {
+      res.status(500).json("error");
+    }
       break;
 
     default:
       res.setHeader("Allow", ["POST"]);
-      res.status(405).end(`Action Not Allowed`);
+      res.status(405).end();
       break;
   }
 }

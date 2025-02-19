@@ -15,6 +15,7 @@ export default function Login() {
     password: "",
   });
   const [errors, setErrors] = useState<Partial<Account>>({});
+  const router = useRouter();
 
   const togglePasswordVisibility = () => {
     setPasswordVisibility((prevVisibility) => !prevVisibility);
@@ -60,21 +61,24 @@ export default function Login() {
           data: formData,
         }),
       });
-      const data = await response.json();
+      const data = await response;
+      console.log(data);
       switch (response.status) {
         case 200:
           console.log("User created successfully");
-          useRouter().push("/");
+          router.push("/");
           break;
         case 401:
           console.error("Unauthorized: Invalid password");
           break;
         // Account creation:
         case 202:
-          console.log("No user found. Please create an account:");
+          console.log("No user found. Please create an account");
+
+          router.push(`/auth/${formData.email}`);
           break;
         default:
-          console.error("Error creating user:", data.error);
+          console.error("Error creating user:");
           break;
       }
     }
