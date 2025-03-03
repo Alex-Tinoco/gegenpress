@@ -5,6 +5,8 @@ import { Account } from "@models/authmodel";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
+import { toast, ToastContainer } from "react-toastify";
+import { CreateAccount } from "./CreateAccount";
 
 export default function Login() {
   const [passwordVisibility, setPasswordVisibility] = useState(true);
@@ -16,6 +18,7 @@ export default function Login() {
   });
   const [errors, setErrors] = useState<Partial<Account>>({});
   const router = useRouter();
+  const [RegisterPopUpOpen, setRegisterPopUpOpen] = useState(false);
 
   const togglePasswordVisibility = () => {
     setPasswordVisibility((prevVisibility) => !prevVisibility);
@@ -65,7 +68,7 @@ export default function Login() {
       console.log(data);
       switch (response.status) {
         case 200:
-          console.log("User created successfully");
+          console.log("Logged-in successfully");
           router.push("/");
           break;
         case 401:
@@ -74,8 +77,19 @@ export default function Login() {
         // Account creation:
         case 202:
           console.log("No user found. Please create an account");
-
-          router.push(`/auth/${formData.email}`);
+          // toast.error("No account found, please create a new one", {
+          //   position: "top-center",
+          //   autoClose: 3000,
+          //   hideProgressBar: false,
+          //   closeOnClick: true,
+          //   pauseOnHover: true,
+          //   draggable: true,
+          //   progress: undefined,
+          //   onClose: () => {
+          //     router.push(`/auth/${formData.email}`);
+          //   }
+          // });
+          setRegisterPopUpOpen(true);
           break;
         default:
           console.error("Error creating user:");
@@ -86,19 +100,21 @@ export default function Login() {
 
   return (
     <div className="flex h-screen w-full items-center justify-center">
+      <ToastContainer/>
+      {RegisterPopUpOpen == true && <CreateAccount formData = {formData} handleChange = {handleChange} togglePasswordVisibility={togglePasswordVisibility}/> }
       <div className="flex w-2/3 flex-col items-center justify-center gap-5 md:w-1/2">
         <h1 className="text-4xl font-bold">Get Started</h1>
         <div className="flex w-full flex-col items-center justify-center gap-3">
-          <button className="flex w-full items-center justify-center gap-2 rounded-md border-1 border-gray-300 py-3 hover:bg-gray-100">
+          <button className="flex w-full items-center justify-center gap-2 rounded-md border-1 border-gray-300 py-3 hover:bg-gray-100 cursor-pointer">
             <img src="/icons/google.png" className="h-6" alt="Google Logo" />
             Sign in with Google
           </button>
-          <button className="flex w-full items-center justify-center gap-2 rounded-md border-1 border-gray-300 py-3 hover:bg-gray-100">
+          <button className="flex w-full items-center justify-center gap-2 rounded-md border-1 border-gray-300 py-3 hover:bg-gray-100 cursor-pointer">
             <img src="/icons/discord.png" className="h-6" alt="Google Logo" />
             Sign in with Discord
           </button>
         </div>
-        <div className="flex w-full flex-row gap-3">
+        <div className="flex w-full flex-row gap-3 cursor-default">
           <div className="flex-grow -translate-y-2.5 border-b-1 border-gray-400"></div>
           <span className="mx-1 flex-shrink text-gray-400">OR</span>
           <div className="flex-grow -translate-y-2.5 border-b-1 border-gray-400"></div>
@@ -154,7 +170,7 @@ export default function Login() {
 
           <button
             type="submit"
-            className="flex w-full cursor-pointer items-center justify-center rounded-md border-2 bg-indigo-500 py-2 text-white hover:bg-indigo-600"
+            className="flex w-full cursor-pointer items-center justify-center rounded-md border-2 bg-main py-2 text-white hover:bg-main-darker"
           >
             Sign in or register
           </button>

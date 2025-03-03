@@ -2,6 +2,9 @@
 @import "tailwindcss";
 @theme {
   --font-poppins: "Poppins", sans-serif;
+  --color-main: #615fff;
+  --color-main-lighter: #7c86ff;
+  --color-main-darker: #4f39f6;
 }
 *:focus {
   outline: none;

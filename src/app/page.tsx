@@ -1,5 +1,6 @@
 "use client";
 
+import { FullScreenToast } from "@/components/FullScreenToast";
 import getDataAPI from "@/lib/valapi";
 import getAgents from "@/lib/valapi";
 import { useEffect, useState } from "react";
@@ -28,8 +29,6 @@ export default function Home() {
           <li key={agent.uuid}>{agent.displayName}</li>
         ))}
       </ul> */}
-
-
     </div>
   );
 }
