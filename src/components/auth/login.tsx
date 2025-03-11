@@ -100,21 +100,27 @@ export default function Login() {
 
   return (
     <div className="flex h-screen w-full items-center justify-center">
-      <ToastContainer/>
-      {RegisterPopUpOpen == true && <CreateAccount formData = {formData} handleChange = {handleChange} togglePasswordVisibility={togglePasswordVisibility}/> }
+      <ToastContainer />
+      {RegisterPopUpOpen == true && (
+        <CreateAccount
+          formData={formData}
+          handleChange={handleChange}
+          togglePasswordVisibility={togglePasswordVisibility}
+        />
+      )}
       <div className="flex w-2/3 flex-col items-center justify-center gap-5 md:w-1/2">
         <h1 className="text-4xl font-bold">Get Started</h1>
         <div className="flex w-full flex-col items-center justify-center gap-3">
-          <button className="flex w-full items-center justify-center gap-2 rounded-md border-1 border-gray-300 py-3 hover:bg-gray-100 cursor-pointer">
+          <button className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-md border-1 border-gray-300 py-3 hover:bg-gray-100">
             <img src="/icons/google.png" className="h-6" alt="Google Logo" />
             Sign in with Google
           </button>
-          <button className="flex w-full items-center justify-center gap-2 rounded-md border-1 border-gray-300 py-3 hover:bg-gray-100 cursor-pointer">
+          <button className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-md border-1 border-gray-300 py-3 hover:bg-gray-100">
             <img src="/icons/discord.png" className="h-6" alt="Google Logo" />
             Sign in with Discord
           </button>
         </div>
-        <div className="flex w-full flex-row gap-3 cursor-default">
+        <div className="flex w-full cursor-default flex-row gap-3">
           <div className="flex-grow -translate-y-2.5 border-b-1 border-gray-400"></div>
           <span className="mx-1 flex-shrink text-gray-400">OR</span>
           <div className="flex-grow -translate-y-2.5 border-b-1 border-gray-400"></div>
@@ -170,7 +176,7 @@ export default function Login() {
 
           <button
             type="submit"
-            className="flex w-full cursor-pointer items-center justify-center rounded-md border-2 bg-main py-2 text-white hover:bg-main-darker"
+            className="bg-main hover:bg-main-darker flex w-full cursor-pointer items-center justify-center rounded-md border-2 py-2 text-white"
           >
             Sign in or register
           </button>

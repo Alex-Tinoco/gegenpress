@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "@/tailwind.css";
-import Navbar from "@/components/Navbar";
+import Navbar from "@/components/navbar";
 import Head from "next/head";
 
 export const metadata: Metadata = {

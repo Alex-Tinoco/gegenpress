@@ -1,18 +1,19 @@
-import { createAccount } from "@/lib/auth/account";
 import { EyeIcon, EyeSlashIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import { Account } from "@models/authmodel";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { FormEvent, useEffect, useState } from "react";
 
 interface CreateAccountProps {
-  formData: Account
+  formData: Account;
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   togglePasswordVisibility: () => void;
 }
 
-export const CreateAccount: React.FC<CreateAccountProps> = ({ formData, handleChange, togglePasswordVisibility }) => {
-
+export const CreateAccount: React.FC<CreateAccountProps> = ({
+  formData,
+  handleChange,
+  togglePasswordVisibility,
+}) => {
   const [errors, setErrors] = useState<Partial<Account>>({});
   const [passwordType, setPasswordType] = useState("password");
 
@@ -32,13 +33,15 @@ export const CreateAccount: React.FC<CreateAccountProps> = ({ formData, handleCh
     return Object.keys(newErrors).length === 0;
   };
 
-  useEffect(() => {console.log(formData)}, [formData])
+  useEffect(() => {
+    console.log(formData);
+  }, [formData]);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const isValid = validation();
     if (isValid) {
-      const dataToSend = formData
+      const dataToSend = formData;
       const response = await fetch("/api/account", {
         method: "POST",
         headers: {
@@ -69,13 +72,18 @@ export const CreateAccount: React.FC<CreateAccountProps> = ({ formData, handleCh
   };
 
   return (
-    <div className="flex h-screen w-screen items-center justify-center absolute top-0 left-0 z-10">
-      <div className="h-full w-full backdrop-blur-md absolute"/>
-      <div className="flex bg-white/70 shadow-md rounded-md p-8 flex-col items-center justify-center gap-5 md:w-auto relative">
-        <button className="text-black p-3" ><XMarkIcon className="text-6xl cursor-pointer text-black"/>  </button>
-        <h1 className="text-lg md:text-4xl font-bold">Confirm account creation</h1>
+    <div className="absolute top-0 left-0 z-10 flex h-screen w-screen items-center justify-center">
+      <div className="absolute h-full w-full backdrop-blur-md" />
+      <div className="relative flex flex-col items-center justify-center gap-5 rounded-md bg-white/70 p-8 shadow-md md:w-auto">
+        <button className="p-3 text-black">
+          <XMarkIcon className="cursor-pointer text-6xl text-black" />{" "}
+        </button>
+        <h1 className="text-lg font-bold md:text-4xl">
+          Confirm account creation
+        </h1>
         <p className="text-s w-2/3 text-center text-gray-500">
-          It looks like you haven't created an account yet. Simply confirm your password to create one.
+          It looks like you haven't created an account yet. Simply confirm your
+          password to create one.
         </p>
         <form className="flex w-full flex-col gap-3" onSubmit={handleSubmit}>
           <div className="flex flex-col gap-2">
@@ -85,7 +93,7 @@ export const CreateAccount: React.FC<CreateAccountProps> = ({ formData, handleCh
             <input
               type="text"
               defaultValue={formData.email}
-              className={`w-full rounded-md border-1 border-gray-300 p-2 text-sm bg-gray-100 focus:border-indigo-500 ${
+              className={`w-full rounded-md border-1 border-gray-300 bg-gray-100 p-2 text-sm focus:border-indigo-500 ${
                 errors.email ? "border-red-500" : ""
               }`}
               onChange={handleChange}
@@ -93,7 +101,9 @@ export const CreateAccount: React.FC<CreateAccountProps> = ({ formData, handleCh
               disabled
             />
             {errors.email && (
-              <p className="text-s translate-x-1 text-red-500">{errors.email}</p>
+              <p className="text-s translate-x-1 text-red-500">
+                {errors.email}
+              </p>
             )}
           </div>
 
@@ -128,7 +138,7 @@ export const CreateAccount: React.FC<CreateAccountProps> = ({ formData, handleCh
 
           <button
             type="submit"
-            className="flex w-full cursor-pointer items-center justify-center rounded-md border-2 bg-main py-2 text-white hover:bg-indigo-600"
+            className="bg-main flex w-full cursor-pointer items-center justify-center rounded-md border-2 py-2 text-white hover:bg-indigo-600"
           >
             Create account
           </button>
