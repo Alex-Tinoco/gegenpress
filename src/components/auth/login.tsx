@@ -1,41 +1,44 @@
 "use client";
 
-import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/solid";
-import { Account } from "@models/authmodel";
+import { Account, Errors } from "@models/authmodel";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import { CreateAccount } from "./CreateAccount";
+import PasswordInput from "./PasswordInput";
 
 export default function Login() {
-  const [passwordVisibility, setPasswordVisibility] = useState(true);
-  const [passwordType, setPasswordType] = useState("password");
   const [formData, setFormData] = useState<Account>({
     name: "",
     email: "",
     password: "",
+    memory: false
   });
-  const [errors, setErrors] = useState<Partial<Account>>({});
+  const [errors, setErrors] = useState<Errors>({});
   const router = useRouter();
-  const [RegisterPopUpOpen, setRegisterPopUpOpen] = useState(false);
+  const [RegisterPopUpOpen, setRegisterPopUpOpen] = useState<"open" | "closed">("closed");
+  const [isChecked, setIsChecked] = useState(false);
 
-  const togglePasswordVisibility = () => {
-    setPasswordVisibility((prevVisibility) => !prevVisibility);
-    setPasswordType((prevType) =>
-      prevType === "password" ? "text" : "password",
-    );
+
+  const handleCheckboxChange = () => {
+    setIsChecked(!isChecked);
   };
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,
     }));
+    setErrors((prevErrors) => ({
+     ...prevErrors,
+      [name]: "",
+    }));
   };
 
   const validation = () => {
-    const errors: Partial<Account> = {};
+    const errors: Errors = {};
     if (!formData.email) {
       errors.email = "Email is required";
     } else if (!/^\S+@\S+\.\S+$/.test(formData.email)) {
@@ -65,31 +68,26 @@ export default function Login() {
         }),
       });
       const data = await response;
-      console.log(data);
       switch (response.status) {
         case 200:
           console.log("Logged-in successfully");
           router.push("/");
           break;
         case 401:
-          console.error("Unauthorized: Invalid password");
+          setErrors({password: "Invalid password"});
           break;
         // Account creation:
         case 202:
-          console.log("No user found. Please create an account");
-          // toast.error("No account found, please create a new one", {
-          //   position: "top-center",
-          //   autoClose: 3000,
-          //   hideProgressBar: false,
-          //   closeOnClick: true,
-          //   pauseOnHover: true,
-          //   draggable: true,
-          //   progress: undefined,
-          //   onClose: () => {
-          //     router.push(`/auth/${formData.email}`);
-          //   }
-          // });
-          setRegisterPopUpOpen(true);
+          toast.error("No account found, please create a new one", {
+            position: "top-center",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          });
+          setRegisterPopUpOpen("open");
           break;
         default:
           console.error("Error creating user:");
@@ -101,10 +99,10 @@ export default function Login() {
   return (
     <div className="flex h-screen w-full items-center justify-center">
       <ToastContainer/>
-      {RegisterPopUpOpen == true && <CreateAccount formData = {formData} handleChange = {handleChange} togglePasswordVisibility={togglePasswordVisibility}/> }
+      {RegisterPopUpOpen == "open" && <CreateAccount formData = {formData} handleChange = {handleChange} setRegisterPopUpOpen={setRegisterPopUpOpen}/> }
       <div className="flex w-2/3 flex-col items-center justify-center gap-5 md:w-1/2">
         <h1 className="text-4xl font-bold">Get Started</h1>
-        <div className="flex w-full flex-col items-center justify-center gap-3">
+        {/* <div className="flex w-full flex-col items-center justify-center gap-3">
           <button className="flex w-full items-center justify-center gap-2 rounded-md border-1 border-gray-300 py-3 hover:bg-gray-100 cursor-pointer">
             <img src="/icons/google.png" className="h-6" alt="Google Logo" />
             Sign in with Google
@@ -118,7 +116,7 @@ export default function Login() {
           <div className="flex-grow -translate-y-2.5 border-b-1 border-gray-400"></div>
           <span className="mx-1 flex-shrink text-gray-400">OR</span>
           <div className="flex-grow -translate-y-2.5 border-b-1 border-gray-400"></div>
-        </div>
+        </div> */}
         <form className="flex w-full flex-col gap-3" onSubmit={handleSubmit}>
           <div className="flex flex-col gap-2">
             <label className="text-s translate-x-1">
@@ -138,35 +136,28 @@ export default function Login() {
             )}
           </div>
 
-          <div className="flex flex-col gap-2">
-            <label className="text-s translate-x-1">
-              Password <span className="text-red-600">*</span>
-            </label>
-            <div className="flex flex-row items-center justify-center gap-1.5">
+          <PasswordInput name="password" label="Password" handleChange={handleChange} errors={errors}/>
+
+          <div className="flex justify-between">
+            <div className="flex items-center space-x-2">
               <input
-                type={passwordType}
-                placeholder="Enter your password"
-                className={`w-full rounded-md border-1 border-gray-300 p-2 text-sm hover:bg-gray-100 focus:border-indigo-500${errors.password && "border-1 border-red-500"}`}
-                onChange={handleChange}
-                name="password"
+                type="checkbox"
+                id="remember-me"
+                checked={isChecked}
+                onChange={handleCheckboxChange}
+                className="h-4 w-4 text-main border-gray-300 rounded focus:ring-main-darker"
               />
-              <div onClick={togglePasswordVisibility}>
-                {passwordVisibility ? (
-                  <EyeIcon className="h-9 cursor-pointer rounded-md border-1 border-gray-300 p-1 text-gray-300 hover:bg-gray-100" />
-                ) : (
-                  <EyeSlashIcon className="h-9 cursor-pointer rounded-md border-1 border-gray-300 p-1 text-gray-300 hover:bg-gray-100" />
-                )}
-              </div>
+              <label
+                htmlFor="remember-me"
+                className="text-sm font-medium text-gray-700"
+              >
+                Remember Me
+              </label>
             </div>
-            {errors.password && (
-              <p className="text-s translate-x-1 text-red-500">
-                {errors.password}
-              </p>
-            )}
+            {/* <span className="text-s text-right underline">
+              <Link href={"/"}>Forget password?</Link>
+            </span> */}
           </div>
-          <span className="text-s text-right underline">
-            <Link href={"/"}>I forgot my password</Link>
-          </span>
 
           <button
             type="submit"
@@ -174,6 +165,7 @@ export default function Login() {
           >
             Sign in or register
           </button>
+          <span className="self-center text-center text-md text-gray-700"><span className="font-bold">New here?</span> You can create an account using this form as well.</span>
         </form>
       </div>
     </div>

@@ -35,9 +35,6 @@ export async function findUserByEmail(email: string) {
     where: {
       email: email,
     },
-    select: {
-      id: true,
-    },
   });
 }
 
