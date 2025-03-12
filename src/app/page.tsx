@@ -1,34 +1,16 @@
 "use client";
 
-import { FullScreenToast } from "@/components/FullScreenToast";
-import getDataAPI from "@/lib/valapi";
-import getAgents from "@/lib/valapi";
-import { useEffect, useState } from "react";
+import Bento from "@/components/bento";
+import { useState } from "react";
 
 export default function Home() {
-  const [agents, setAgents] = useState<any[]>([]);
-
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const response = await getDataAPI("agents");
-        setAgents(response.data);
-        console.log(response.data);
-      } catch (error) {
-        console.error("Error fetching agents:", error);
-      }
-    }
-    fetchData();
-  }, []);
+  const [agents, setAgents] = useState("a");
 
   return (
-    <div>
-      {/* <h1>Valorant Agents</h1>
-      <ul>
-        {agents.map((agent) => (
-          <li key={agent.uuid}>{agent.displayName}</li>
-        ))}
-      </ul> */}
+    <div className="m-8 flex flex-col flex-wrap gap-4 md:flex-row">
+      <Bento>slt</Bento>
+      <Bento>cv</Bento>
+      <Bento>ooui</Bento>
     </div>
   );
 }
