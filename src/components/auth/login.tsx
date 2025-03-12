@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
-import { CreateAccount } from "./CreateAccount";
+import { CreateAccount } from "./createaccount";
 import PasswordInput from "./PasswordInput";
 
 export default function Login() {
