@@ -1,14 +1,20 @@
 "use client";
 
-import searchByText from "@/lib/weather";
+import searchByText, { Location } from "@/lib/weather";
 import { useEffect, useState } from "react";
 
 export default function WeatherGeoSearch() {
   const [query, setQuery] = useState<string>("");
+  const [data, setData] = useState<Location[]>([]);
+  const [selectedLocation, setSelectedLocation] = useState<Location | null>(
+    null,
+  );
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    searchByText(`q=${query}&maxRows=10`);
+    const data = await searchByText(query);
+    setData(data);
+    console.log(data);
   };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -17,8 +23,15 @@ export default function WeatherGeoSearch() {
   };
 
   useEffect(() => {
-    console.log(query);
+    if (query.length === 0) {
+      setData([]);
+      setSelectedLocation(null);
+    }
   }, [query]);
+
+  const SelectLocation = (city: Location) => {
+    setSelectedLocation(city);
+  };
 
   return (
     <div className="m-20 flex w-fit flex-col justify-center gap-4 rounded-md border-2 p-3">
@@ -36,20 +49,29 @@ export default function WeatherGeoSearch() {
           Search City
         </button>
       </form>
-      <div className="flex flex-col items-start gap-2">
-        <p className="w-full border-b-1 border-gray-200 py-1 hover:bg-gray-100">
-          New York, United States
-        </p>
-        <p className="w-full border-b-1 border-gray-200 py-1">
-          New York, United States
-        </p>
-        <p className="w-full border-b-1 border-gray-200 py-1">
-          New York, United States
-        </p>
-        <p className="w-full border-b-1 border-gray-200 py-1">
-          New York, United States
-        </p>
-      </div>
+      {data.length !== 0 && (
+        <div className="scroll-y-auto flex max-h-64 flex-col items-start gap-2 overflow-y-scroll">
+          {data.map((element) => (
+            <p
+              key={`${element.lat}-${element.lng}`}
+              onClick={() => SelectLocation(element)}
+              className={`w-full border-b border-gray-200 py-1 hover:bg-gray-200 ${selectedLocation?.lat === element.lat && selectedLocation?.lng === element.lng ? "bg-gray-300" : ""}`}
+            >
+              {element.name.charAt(0).toUpperCase() +
+                element.name.slice(1).toLowerCase()}
+              , {element.adminName1 ? `${element.adminName1}, ` : ""}
+              {element.countryName}
+            </p>
+          ))}
+        </div>
+      )}
+      {selectedLocation && (
+        <div className="flex flex-row justify-between gap-2">
+          <button className="w-full rounded-md bg-green-500 p-2 text-white hover:bg-green-600">
+            Select as my location
+          </button>
+        </div>
+      )}
     </div>
   );
 }
