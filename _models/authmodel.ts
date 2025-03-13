@@ -13,5 +13,7 @@ export interface Payload {
     id: string;
     name: string;
     email: string;
+    role: string;
+    location: string;
 }
 

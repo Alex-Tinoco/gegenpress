@@ -1,5 +1,6 @@
 import { createAccount, findUserByEmail, retrievePassword } from "@/lib/auth/accountdb";
 import { signToken } from "@/lib/auth/jwt";
+import { Payload } from "@models/authmodel";
 import { NextApiRequest, NextApiResponse } from "next";
 const bcrypt = require("bcryptjs");
 
@@ -15,7 +16,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           try {
             const password = await retrievePassword(user.id);
             if (await bcrypt.compare(data.password, password.password.hash)) {
-              // signToken(user)
+              let payload: Payload  = {id: user.id, name: user.name, email: user.email, role: user.role, location: user.location}
+              signToken(payload)
               res.status(200).end();
             } else {
               res.status(401).json({ error: "Unauthorized: Invalid password" });

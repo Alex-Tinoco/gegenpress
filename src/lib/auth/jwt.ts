@@ -1,4 +1,6 @@
 import jwt, { JwtPayload } from "jsonwebtoken";
+import { NextApiResponse } from 'next';
+import cookie from 'cookie';
 
 const secretKey = process.env.JWT_SECRET_KEY!;
 
@@ -11,15 +13,13 @@ export function verifyToken(token: string): JwtPayload {
 }
 
 
-import { NextApiResponse } from 'next';
-import cookie from 'cookie';
 
 export function setTokenCookie(res: NextApiResponse, token: string, memory: boolean) {
   res.setHeader('Set-Cookie', cookie.serialize('token', token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     path: '/',
-    ...(memory && { maxAge: 60 * 60 * 24 * 30 }),
+    ...(memory && { maxAge: 60 * 60 * 24 * 14}),
   }));
 }
 
