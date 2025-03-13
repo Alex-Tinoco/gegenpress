@@ -7,25 +7,19 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id           String        @id @default(uuid())
-  name         String?
-  email        String        @unique
-  password     Password?
-  oldPasswords OldPassword[]
+model Users {
+  id                   String    @id @default(uuid())
+  name                 String?
+  email                String    @unique
+  password             Password?
+  wrong_login_attempts String?
+  role                 String    @default("user")
+  location             Json?
 }
 
 model Password {
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user      Users    @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String   @id @unique
   hash      String
   createdAt DateTime @default(now())
-}
-
-model OldPassword {
-  id      String   @id @default(uuid())
-  hash    String
-  addedAt DateTime @default(now())
-  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId  String
 }
