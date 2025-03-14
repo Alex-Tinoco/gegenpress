@@ -13,16 +13,19 @@ export default function Login() {
     name: "",
     email: "",
     password: "",
-    memory: false
+    memory: true,
   });
   const [errors, setErrors] = useState<Errors>({});
   const router = useRouter();
-  const [RegisterPopUpOpen, setRegisterPopUpOpen] = useState<"open" | "closed">("closed");
-  const [isChecked, setIsChecked] = useState(false);
+  const [RegisterPopUpOpen, setRegisterPopUpOpen] = useState<"open" | "closed">(
+    "closed",
+  );
 
-
-  const handleCheckboxChange = () => {
-    setIsChecked(!isChecked);
+  const handleMemoryChange = () => {
+    setFormData((prevData) => ({
+      ...prevData,
+      memory: !prevData.memory,
+    }));
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -32,7 +35,7 @@ export default function Login() {
       [name]: value,
     }));
     setErrors((prevErrors) => ({
-     ...prevErrors,
+      ...prevErrors,
       [name]: "",
     }));
   };
@@ -67,14 +70,13 @@ export default function Login() {
           data: formData,
         }),
       });
-      const data = await response;
       switch (response.status) {
         case 200:
           console.log("Logged-in successfully");
           router.push("/");
           break;
         case 401:
-          setErrors({password: "Invalid password"});
+          setErrors({ password: "Invalid password" });
           break;
         // Account creation:
         case 202:
@@ -98,8 +100,14 @@ export default function Login() {
 
   return (
     <div className="flex h-screen w-full items-center justify-center">
-      <ToastContainer/>
-      {RegisterPopUpOpen == "open" && <CreateAccount formData = {formData} handleChange = {handleChange} setRegisterPopUpOpen={setRegisterPopUpOpen}/> }
+      <ToastContainer />
+      {RegisterPopUpOpen == "open" && (
+        <CreateAccount
+          formData={formData}
+          handleChange={handleChange}
+          setRegisterPopUpOpen={setRegisterPopUpOpen}
+        />
+      )}
       <div className="flex w-2/3 flex-col items-center justify-center gap-5 md:w-1/2">
         <h1 className="text-4xl font-bold">Get Started</h1>
         {/* <div className="flex w-full flex-col items-center justify-center gap-3">
@@ -136,16 +144,21 @@ export default function Login() {
             )}
           </div>
 
-          <PasswordInput name="password" label="Password" handleChange={handleChange} errors={errors}/>
+          <PasswordInput
+            name="password"
+            label="Password"
+            handleChange={handleChange}
+            errors={errors}
+          />
 
           <div className="flex justify-between">
             <div className="flex items-center space-x-2">
               <input
                 type="checkbox"
                 id="remember-me"
-                checked={isChecked}
-                onChange={handleCheckboxChange}
-                className="h-4 w-4 text-main border-gray-300 rounded focus:ring-main-darker"
+                checked={formData.memory}
+                onChange={handleMemoryChange}
+                className="text-main focus:ring-main-darker h-4 w-4 rounded border-gray-300"
               />
               <label
                 htmlFor="remember-me"
@@ -165,7 +178,10 @@ export default function Login() {
           >
             Sign in or register
           </button>
-          <span className="self-center text-center text-md text-gray-700"><span className="font-bold">New here?</span> You can create an account using this form as well.</span>
+          <span className="text-md self-center text-center text-gray-700">
+            <span className="font-bold">New here?</span> You can create an
+            account using this form as well.
+          </span>
         </form>
       </div>
     </div>

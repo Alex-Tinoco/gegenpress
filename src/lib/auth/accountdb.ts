@@ -11,16 +11,11 @@ type PrismaTransactionClient = Omit<
 export async function createAccount(data: Account) {
   await prisma.$transaction(async (prisma: PrismaTransactionClient) => {
     const hashedPassword = await bcrypt.hash(data.password, 10);
-    await prisma.user.create({
+    await prisma.users.create({
       data: {
         name: data.name,
         email: data.email,
         password: {
-          create: {
-            hash: hashedPassword,
-          },
-        },
-        oldPasswords: {
           create: {
             hash: hashedPassword,
           },
@@ -31,7 +26,7 @@ export async function createAccount(data: Account) {
 }
 
 export async function findUserByEmail(email: string) {
-  return await prisma.user.findUnique({
+  return await prisma.users.findUnique({
     where: {
       email: email,
     },
@@ -39,7 +34,7 @@ export async function findUserByEmail(email: string) {
 }
 
 export async function retrievePassword(id: string) {
-  return await prisma.user.findUnique({
+  return await prisma.users.findUnique({
     where: {
       id,
     },
