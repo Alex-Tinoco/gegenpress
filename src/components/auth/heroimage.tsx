@@ -2,9 +2,9 @@ import { CubeTransparentIcon } from "@heroicons/react/24/solid";
 
 export default function HeroImage() {
   return (
-    <div className="flex h-screen w-full flex-col items-center justify-center gap-6 bg-gradient-to-t from-indigo-100 to-indigo-50 font-semibold">
+    <div className="light flex h-screen w-full flex-col items-center justify-center gap-6 bg-gradient-to-t from-indigo-100 to-indigo-50 font-semibold">
       <CubeTransparentIcon className="h-32 w-32 text-indigo-300" />
-      <h1 className="px-5 text-center text-4xl text-main">
+      <h1 className="text-main px-5 text-center text-4xl">
         Welcome to <span className="font-extrabold">Hinqo Games</span>
       </h1>
       <p className="w-2/3 text-center text-xl whitespace-normal text-indigo-400">

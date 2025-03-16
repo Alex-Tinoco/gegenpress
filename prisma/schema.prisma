@@ -23,3 +23,23 @@ model Password {
   hash      String
   createdAt DateTime @default(now())
 }
+
+model Places {
+  id         Int       @id @default(autoincrement())
+  name       String
+  location   String
+  hours_open String
+  image      String
+  fields     Fields[]
+
+}
+
+model Fields {
+  id         Int       @id @default(autoincrement())
+  name       String
+  type       String
+  max_players Int
+  price_per_hour Float
+  place_id Int
+  place Places @relation(fields: [place_id], references: [id])
+}

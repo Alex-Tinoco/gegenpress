@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import "@/tailwind.css";
-import Navbar from "@/components/Navbar";
 import Head from "next/head";
 
 export const metadata: Metadata = {
@@ -15,10 +14,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <Head>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      </Head>
-      <body className="font-poppins">{children}</body>
+      <body className="font-poppins" suppressHydrationWarning>
+        {children}
+      </body>
     </html>
   );
 }
