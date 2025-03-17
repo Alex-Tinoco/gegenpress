@@ -2,6 +2,7 @@
 
 import { getAllPlaces } from "@/lib/book";
 import { Place } from "@models/bookings";
+import Link from "next/link";
 import { use, useEffect, useState } from "react";
 
 export default function BookPage() {
@@ -34,6 +35,9 @@ export default function BookPage() {
 
   return (
     <div className="flex h-screen w-full flex-col items-center justify-center gap-6 bg-gradient-to-t from-indigo-100 to-indigo-50 font-semibold">
+      {selectedPlace && (
+        <div className="text-black"> {selectedPlace.name} </div>
+      )}
       <button className="btn" onClick={() => setModalOpen(true)}>
         Choose A Place
       </button>
@@ -58,21 +62,23 @@ export default function BookPage() {
                     <p>{place.hours_open.trim().split(";")[0]}</p>
                     <p>{place.hours_open.trim().split(";")[1]}</p>
                     <div className="card-actions mt-3 flex justify-center">
-                      <button className="btn btn-soft flex-1">Choose</button>
-                      <button className="btn p-0">
+                      <button
+                        onClick={() => handleSelectPlace(place)}
+                        className="btn btn-soft flex-1"
+                      >
+                        Choose
+                      </button>
+                      <Link
+                        className="btn p-1"
+                        href={`https://www.google.com/maps?q=${place.location}`}
+                        target="_blank"
+                      >
                         <img
                           className="h-full w-auto"
                           src="https://img.icons8.com/?size=100&id=32215&format=png&color=000000"
                           alt="Google Maps"
                         />
-                      </button>
-                      <button className="btn p-0">
-                        <img
-                          className="h-full w-auto"
-                          src="https://img.icons8.com/?size=100&id=83123&format=png&color=000000"
-                          alt="Apple Plans"
-                        />
-                      </button>
+                      </Link>
                     </div>
                   </div>
                 </div>
