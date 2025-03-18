@@ -6,7 +6,9 @@
   --color-main-lighter: #7c86ff;
   --color-main-darker: #4f39f6;
 }
-@plugin "daisyui";
+@plugin "daisyui" {
+  themes: false;
+}
 *:focus {
   outline: none;
 }

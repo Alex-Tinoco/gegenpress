@@ -1,16 +1,26 @@
 "use client";
 
 import Bento from "@/components/bento";
-import { useState } from "react";
+import { MouseEventHandler, useState } from "react";
 
 export default function Home() {
-  const [agents, setAgents] = useState("a");
+  const LogOut = async () => {
+    const response = await fetch("/api/account", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        action: "logOut",
+      }),
+    });
+  };
 
   return (
     <div className="m-8 flex flex-col flex-wrap gap-4 md:flex-row">
-      <Bento>slt</Bento>
-      <Bento>cv</Bento>
-      <Bento>ooui</Bento>
+      <button className="btn btn-primary" onClick={() => LogOut()}>
+        Log Out
+      </button>
     </div>
   );
 }

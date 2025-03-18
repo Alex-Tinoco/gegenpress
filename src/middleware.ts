@@ -1,19 +1,41 @@
-import { Payload } from "@models/authmodel";
-import { verify } from "crypto";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { CheckToken } from "./lib/auth/jwt";
+import { JwtPayload } from "jsonwebtoken";
 
 export function middleware(req: NextRequest) {
+  const res = NextResponse.next();
   const pathname = req.nextUrl.pathname;
-  const pagesWithoutLogin: string[] = ["/login", "/register"];
 
-  console.log(`Method: ${req.method}`);
-  console.log(`URL: ${req.url}`);
+  // Get tokens from cookies
+  const accessToken = req.cookies.get("access_token")?.value;
+  const refreshToken = req.cookies.get("refresh_token")?.value;
 
-  //Get tokens from cookies
-  //if token is not valid, redirect to login page
-  //if token is valid, set token in const
-  //Set payload data in const */
+  let valid = false;
+  let payload: JwtPayload | undefined;
+
+  // If tokens exist, verify them
+  if (accessToken && refreshToken) {
+    const check = CheckToken(res, accessToken, refreshToken);
+    valid = check.valid;
+    payload = check.payload;
+  }
+
+  // Home page should always be accessible
+  if (pathname === "/") {
+    return NextResponse.next();
+  }
+
+  // If logged in, don't allow access to the login page
+  if (pathname === "/auth" && valid) {
+    // Redirect to home page if already logged in
+    return NextResponse.redirect(new URL("/", req.nextUrl.origin));
+  }
+
+  // If not logged in, redirect to login page
+  if (pathname !== "/auth" && !valid) {
+    return NextResponse.redirect(new URL("/auth", req.nextUrl.origin));
+  }
 
   return NextResponse.next();
 }

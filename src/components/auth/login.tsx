@@ -99,7 +99,7 @@ export default function Login() {
   };
 
   return (
-    <div className="flex h-screen w-full items-center justify-center">
+    <div className="bg-w flex h-screen w-full items-center justify-center">
       <ToastContainer />
       {RegisterPopUpOpen == "open" && (
         <CreateAccount

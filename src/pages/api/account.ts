@@ -4,6 +4,7 @@ import {
   retrievePassword,
 } from "@/lib/auth/accountdb";
 import {
+  deleteAuthCookies,
   setTokenCookies,
   signAccessToken,
   signRefreshToken,
@@ -83,6 +84,17 @@ export default async function handler(
         }
       } catch (error) {
         console.error("Error creating account:", error);
+        res.status(500).json({ error: "Internal Server Error" });
+      }
+      break;
+
+    case "logOut":
+      try {
+        deleteAuthCookies(res);
+        console.log("Logged out");
+        res.status(200).end();
+      } catch (error) {
+        console.error("Error logging out:", error);
         res.status(500).json({ error: "Internal Server Error" });
       }
       break;
