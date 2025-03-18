@@ -79,16 +79,17 @@ export const CreateAccount: React.FC<CreateAccountProps> = ({
   };
 
   return (
-    <div className="absolute top-0 left-0 z-10 flex h-screen w-screen items-center justify-center">
+    <div className="absolute top-0 left-0 z-10 flex h-screen w-screen items-center justify-center ">
       <div className="absolute h-full w-full backdrop-blur-md" />
-      <div className="relative flex flex-col items-center justify-center gap-5 rounded-md bg-white/70 p-8 shadow-md md:w-auto">
-        <button className="p-3 text-black">
-          <XMarkIcon className="cursor-pointer text-6xl text-black" />{" "}
+      <button onClick={()=> setRegisterPopUpOpen("closed")} className="w-full h-full"></button>
+      <div className="relative flex flex-col items-center justify-center gap-5 rounded-xl bg-white/80 p-8 shadow-md md:w-auto">
+        <button className="p-3 text-dark">
+          <XMarkIcon className="cursor-pointer text-6xl text-dark" />{" "}
         </button>
         <h1 className="text-lg font-bold md:text-4xl">
           Confirm account creation
         </h1>
-        <p className="text-s w-2/3 text-center text-gray-500">
+        <p className="text-s w-2/3 text-center text-dark">
           It looks like you haven't created an account yet. Simply confirm your
           password to create one.
         </p>
@@ -100,7 +101,7 @@ export const CreateAccount: React.FC<CreateAccountProps> = ({
             <input
               type="text"
               defaultValue={formData.email}
-              className={`w-full rounded-md border-1 border-gray-300 bg-gray-100 p-2 text-sm focus:border-indigo-500`}
+              className={`w-full rounded-md border-1 border-gray-500 bg-gray-300 p-2 text-sm `}
               name="email"
               disabled
             />
@@ -114,7 +115,7 @@ export const CreateAccount: React.FC<CreateAccountProps> = ({
           />
           <button
             type="submit"
-            className="bg-main flex w-full cursor-pointer items-center justify-center rounded-md border-2 py-2 text-white hover:bg-indigo-600"
+            className="bg-main flex w-full cursor-pointer items-center justify-center rounded-md border-2 py-2 text-light hover:bg-main-darker border-gray-200"
           >
             Create account
           </button>

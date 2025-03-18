@@ -144,7 +144,7 @@ export default function Login() {
             <input
               type="text"
               placeholder="Enter your email"
-              className={`w-full rounded-md border-1 border-gray-300 p-2 text-sm hover:bg-gray-100 focus:border-indigo-500${errors.email && "border-1 border-red-500"}`}
+              className={`w-full rounded-md border-1 border-gray-300 p-2 text-sm hover:bg-gray-200/60 focus:border-dark ${errors.email && "border-1 border-red-500"}`}
               onChange={handleChange}
               name="email"
             />
