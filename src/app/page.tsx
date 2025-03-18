@@ -14,6 +14,9 @@ export default function Home() {
         action: "logOut",
       }),
     });
+    if (response.ok) {
+      window.location.href = "/auth";
+    }    
   };
 
   return (

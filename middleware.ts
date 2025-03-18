@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { jwtVerify } from "jose";
-import { deleteAuthCookies } from "./lib/auth/jwtfunctions";
+import { deleteAuthCookies } from "./src/lib/auth/jwtfunctions";
 
 export async function middleware(req: NextRequest, res: NextResponse) {
   const secretKey = process.env.JWT_SECRET_KEY!;

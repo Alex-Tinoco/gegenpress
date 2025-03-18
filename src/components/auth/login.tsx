@@ -185,7 +185,7 @@ export default function Login() {
 
           <button
             type="submit"
-            className="bg-main hover:bg-main-darker flex w-full cursor-pointer items-center justify-center rounded-md border-2 py-2 text-white"
+            className="w-full btn-primary"
           >
             Sign in or register
           </button>

@@ -7,8 +7,12 @@
   --color-main-darker: #4f39f6;
 }
 @plugin "daisyui" {
-  themes: false;
+  themes: acid --default;
 }
 *:focus {
   outline: none;
+}
+
+.btn-primary {
+  @apply bg-main hover:bg-main-darker flex cursor-pointer items-center justify-center rounded-md border-2 py-2 text-white;
 }
