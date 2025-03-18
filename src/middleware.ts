@@ -1,40 +1,57 @@
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
-import { CheckToken } from "./lib/auth/jwt";
-import { JwtPayload } from "jsonwebtoken";
+import { NextRequest, NextResponse } from "next/server";
+import { jwtVerify } from "jose";
+import { deleteAuthCookies } from "./lib/auth/jwtfunctions";
 
-export function middleware(req: NextRequest) {
-  const res = NextResponse.next();
+export async function middleware(req: NextRequest, res: NextResponse) {
+  const secretKey = process.env.JWT_SECRET_KEY!;
   const pathname = req.nextUrl.pathname;
 
   // Get tokens from cookies
   const accessToken = req.cookies.get("access_token")?.value;
   const refreshToken = req.cookies.get("refresh_token")?.value;
+  let payload;
 
-  let valid = false;
-  let payload: JwtPayload | undefined;
+  // If access token exists, verify it
+  if (accessToken) {
+    try {
+      const { payload: accessTokenPayload } = await jwtVerify(
+        accessToken,
+        new TextEncoder().encode(secretKey)
+      );
+      payload = accessTokenPayload;
+    } catch (error) {
+      console.error("Access token verification failed", error);
 
-  // If tokens exist, verify them
-  if (accessToken && refreshToken) {
-    const check = CheckToken(res, accessToken, refreshToken);
-    valid = check.valid;
-    payload = check.payload;
+      if (refreshToken) {
+        try {
+          const { payload: refreshTokenPayload } = await jwtVerify(
+            refreshToken,
+            new TextEncoder().encode(secretKey)
+          );
+          payload = refreshTokenPayload;
+        } catch (err) {
+          console.error("Refresh token verification failed", err);
+        }
+      } else {
+        deleteAuthCookies(res);
+        return NextResponse.redirect(new URL("/auth", req.url));
+      }
+    }
   }
 
-  // Home page should always be accessible
+  // Handle route behavior based on token verification
   if (pathname === "/") {
     return NextResponse.next();
   }
 
-  // If logged in, don't allow access to the login page
-  if (pathname === "/auth" && valid) {
+  if (pathname === "/auth" && payload) {
     // Redirect to home page if already logged in
-    return NextResponse.redirect(new URL("/", req.nextUrl.origin));
+    return NextResponse.redirect(new URL("/", req.url));
   }
 
-  // If not logged in, redirect to login page
-  if (pathname !== "/auth" && !valid) {
-    return NextResponse.redirect(new URL("/auth", req.nextUrl.origin));
+  if (pathname !== "/auth" && !payload) {
+    // Redirect to login page if not logged in
+    return NextResponse.redirect(new URL("/auth", req.url));
   }
 
   return NextResponse.next();

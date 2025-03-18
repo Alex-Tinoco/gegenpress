@@ -1,5 +1,5 @@
 import Login from "@/components/auth/login";
-import HeroImage from "@/components/auth/HeroImage";
+import HeroImage from "@/components/auth/heroimage";
 
 export default function AuthenticationPage() {
   return (

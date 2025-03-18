@@ -8,7 +8,7 @@ import {
   setTokenCookies,
   signAccessToken,
   signRefreshToken,
-} from "@/lib/auth/jwt";
+} from "@/lib/auth/jwtfunctions";
 import { Payload } from "@models/authmodel";
 import { NextApiRequest, NextApiResponse } from "next";
 const bcrypt = require("bcryptjs");
@@ -41,8 +41,8 @@ export default async function handler(
 
               setTokenCookies(
                 res,
-                signAccessToken(payload),
-                payload.memory ? signRefreshToken(payload) : undefined,
+                await signAccessToken(payload),
+                payload.memory ? await signRefreshToken(payload) : undefined,
               );
 
               res.status(200).end();
@@ -52,8 +52,8 @@ export default async function handler(
           } catch (error) {
             console.error("Error retrieving password:", error);
             res
-              .status(401)
-              .json({ error: "Unauthorized: Error retrieving password" });
+              .status(500)
+              .json({ error: "Intern server error" });
           }
         } else {
           res

@@ -1,3 +1,5 @@
+import { JWTPayload } from "jose";
+
 export interface Account {
   name: string;
   email: string;
@@ -9,7 +11,7 @@ export interface Errors {
   [key: string]: string | undefined;
 }
 
-export interface Payload {
+export interface Payload extends JWTPayload{
   id: string;
   name: string;
   email: string;

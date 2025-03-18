@@ -78,6 +78,17 @@ export default function Login() {
         case 401:
           setErrors({ password: "Invalid password" });
           break;
+        case 500:
+          toast.error("Internal server error", {
+            position: "top-center",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          });
+          break;
         // Account creation:
         case 202:
           toast.error("No account found, please create a new one", {
