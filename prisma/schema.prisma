@@ -14,7 +14,6 @@ model Users {
   password             Password?
   wrong_login_attempts String?
   role                 String    @default("user")
-  location             Json?
 }
 
 model Password {

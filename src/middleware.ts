@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { jwtVerify } from "jose";
-import { deleteAuthCookies } from "./src/lib/auth/jwtfunctions";
+import { deleteAuthCookies } from "./lib/auth/jwtfunctions";
 
 export async function middleware(req: NextRequest, res: NextResponse) {
   const secretKey = process.env.JWT_SECRET_KEY!;
   const pathname = req.nextUrl.pathname;
+  console.log("middleware called");
 
   // Get tokens from cookies
   const accessToken = req.cookies.get("access_token")?.value;
@@ -16,7 +17,7 @@ export async function middleware(req: NextRequest, res: NextResponse) {
     try {
       const { payload: accessTokenPayload } = await jwtVerify(
         accessToken,
-        new TextEncoder().encode(secretKey)
+        new TextEncoder().encode(secretKey),
       );
       payload = accessTokenPayload;
     } catch (error) {
@@ -26,7 +27,7 @@ export async function middleware(req: NextRequest, res: NextResponse) {
         try {
           const { payload: refreshTokenPayload } = await jwtVerify(
             refreshToken,
-            new TextEncoder().encode(secretKey)
+            new TextEncoder().encode(secretKey),
           );
           payload = refreshTokenPayload;
         } catch (err) {
@@ -59,6 +60,6 @@ export async function middleware(req: NextRequest, res: NextResponse) {
 
 export const config = {
   matcher: [
-    "/((?!api|_next/static|favicon.ico|icons).*)", // Match all paths except API routes and static files
+    "/((?!api|lib|_next/static|favicon.ico|icons|places_images).*)", // Match all paths except API routes and static files
   ],
 };

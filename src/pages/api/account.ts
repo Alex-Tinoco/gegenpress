@@ -51,9 +51,7 @@ export default async function handler(
             }
           } catch (error) {
             console.error("Error retrieving password:", error);
-            res
-              .status(500)
-              .json({ error: "Intern server error" });
+            res.status(500).json({ error: "Intern server error" });
           }
         } else {
           res

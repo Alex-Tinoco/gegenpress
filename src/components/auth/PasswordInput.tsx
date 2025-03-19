@@ -9,7 +9,12 @@ interface PasswordInputProps {
   errors: Errors;
 }
 
-const PasswordInput: React.FC<PasswordInputProps> = ({ name, label, handleChange, errors }) => {
+const PasswordInput: React.FC<PasswordInputProps> = ({
+  name,
+  label,
+  handleChange,
+  errors,
+}) => {
   const [visibility, setVisibility] = useState<Record<string, boolean>>({});
 
   const togglePasswordVisibility = (inputName: string) => {
@@ -28,7 +33,7 @@ const PasswordInput: React.FC<PasswordInputProps> = ({ name, label, handleChange
         <input
           type={visibility[name] ? "text" : "password"}
           placeholder={`${label}`}
-          className={`w-full rounded-md border border-gray-500 p-2 text-sm hover:bg-gray-200/60 focus:border-dark ${
+          className={`focus:border-dark w-full rounded-md border border-gray-300 p-2 text-sm hover:bg-gray-200/60 ${
             errors[name] ? "border border-red-500" : ""
           }`}
           onChange={handleChange}
@@ -36,13 +41,15 @@ const PasswordInput: React.FC<PasswordInputProps> = ({ name, label, handleChange
         />
         <div onClick={() => togglePasswordVisibility(name)}>
           {visibility[name] ? (
-            <EyeIcon className="h-9 cursor-pointer rounded-md border border-dark p-1 text-dark hover:bg-gray-200/60" />
+            <EyeIcon className="border-dark text-dark h-9 cursor-pointer rounded-md border p-1 hover:bg-gray-200/60" />
           ) : (
-            <EyeSlashIcon className="h-9 cursor-pointer rounded-md border border-dark p-1 text-dark hover:bg-gray-200/60" />
+            <EyeSlashIcon className="border-dark text-dark h-9 cursor-pointer rounded-md border p-1 hover:bg-gray-200/60" />
           )}
         </div>
       </div>
-      {errors[name] && <p className="text-s translate-x-1 text-red-500">{errors[name]}</p>}
+      {errors[name] && (
+        <p className="text-s translate-x-1 text-red-500">{errors[name]}</p>
+      )}
     </div>
   );
 };
