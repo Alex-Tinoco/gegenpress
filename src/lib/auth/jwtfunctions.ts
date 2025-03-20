@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { jwtVerify, SignJWT, JWTPayload } from "jose";
 import cookie from "cookie";
 import { NextApiResponse } from "next";
@@ -8,16 +8,16 @@ import { Payload } from "@models/authmodel";
 const secretKey = new TextEncoder().encode(process.env.JWT_SECRET_KEY!);
 
 // Access Token Creation
-export async function signAccessToken(payload: Payload): Promise<string> {
+export async function signAccessToken(payload: JWTPayload): Promise<string> {
   const jwt = new SignJWT(payload)
     .setProtectedHeader({ alg: 'HS256' })
-    .setExpirationTime("1h"); 
+    .setExpirationTime("10s"); 
 
   return await jwt.sign(secretKey);
 }
 
 // Refresh Token Creation
-export async function signRefreshToken(payload: Payload): Promise<string> {
+export async function signRefreshToken(payload: JWTPayload): Promise<string> {
   const jwt = new SignJWT(payload)
     .setProtectedHeader({ alg: 'HS256' }) 
     .setExpirationTime("15d"); 
@@ -51,7 +51,7 @@ export function setTokenCookies(
           httpOnly: true,
           secure: process.env.NODE_ENV === "production",
           path: "/",
-          maxAge: 60 * 60, // 1 hour
+          maxAge: 10, // 1 hour
         })
       );
     }
@@ -75,7 +75,8 @@ export function setTokenCookies(
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         path: "/",
-        maxAge: 60 * 60, // 1 hour
+        maxAge: 10, // 1 hour
+        sameSite: "strict",
       });
     }
 
@@ -85,6 +86,7 @@ export function setTokenCookies(
         secure: process.env.NODE_ENV === "production",
         path: "/",
         maxAge: 60 * 60 * 24 * 15, // 15 days
+        sameSite: "strict",
       });
     }
   }
@@ -126,3 +128,36 @@ export function deleteAuthCookies(res: NextApiResponse | NextResponse) {
   }
 }
   
+export async function accessTokenVerification (accessToken: string) {
+  try {
+    const { payload: accessTokenPayload } = await jwtVerify(
+      accessToken,
+      secretKey
+    );
+    return accessTokenPayload;
+  } catch (error) {
+    console.error("Access token verification failed", error);
+  }
+}
+
+export async function refreshAccessToken (res: NextResponse,refresh_token: string) {
+  try {
+    const { payload: refreshTokenPayload } = await jwtVerify(
+      refresh_token,
+      secretKey
+    );
+    const accessToken = await signAccessToken(refreshTokenPayload);
+    setTokenCookies(res, accessToken, undefined);    
+    return refreshTokenPayload;
+  } catch (error) {
+    console.error("Access token verification failed", error);
+  }
+}
+
+
+
+export function expiredTokenLogOut (req: NextRequest ,res: NextResponse) {
+  deleteAuthCookies(res);
+  console.log("Refresh token expired, redirecting to login page.")
+  return NextResponse.redirect(new URL("/auth", req.url));
+} 

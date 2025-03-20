@@ -1,42 +1,38 @@
 import { NextRequest, NextResponse } from "next/server";
 import { jwtVerify } from "jose";
-import { deleteAuthCookies } from "./lib/auth/jwtfunctions";
+import { accessTokenVerification, deleteAuthCookies, refreshAccessToken, setTokenCookies, signAccessToken } from "./lib/auth/jwtfunctions";
 
 export async function middleware(req: NextRequest, res: NextResponse) {
   const secretKey = process.env.JWT_SECRET_KEY!;
   const pathname = req.nextUrl.pathname;
-  console.log("middleware called");
 
   // Get tokens from cookies
   const accessToken = req.cookies.get("access_token")?.value;
   const refreshToken = req.cookies.get("refresh_token")?.value;
-  let payload;
+  let payload = null;
+  let validAccess = false;
 
-  // If access token exists, verify it
-  if (accessToken) {
+  if (accessToken || refreshToken) {
     try {
-      const { payload: accessTokenPayload } = await jwtVerify(
-        accessToken,
-        new TextEncoder().encode(secretKey),
-      );
-      payload = accessTokenPayload;
-    } catch (error) {
-      console.error("Access token verification failed", error);
-
-      if (refreshToken) {
-        try {
-          const { payload: refreshTokenPayload } = await jwtVerify(
-            refreshToken,
-            new TextEncoder().encode(secretKey),
-          );
-          payload = refreshTokenPayload;
-        } catch (err) {
-          console.error("Refresh token verification failed", err);
-        }
-      } else {
-        deleteAuthCookies(res);
-        return NextResponse.redirect(new URL("/auth", req.url));
+     if (accessToken) {
+      try {
+        payload = await accessTokenVerification(accessToken);
+        console.log("Access token verified");
+        validAccess = true;
+      } catch (err) {
+        console.log("Access token verification failed")
       }
+    }
+    if (!validAccess && refreshToken) {
+      try {
+        payload = await refreshAccessToken(res,refreshToken);
+        console.log("Refreshed access token");
+      } catch (err) {
+        console.log("Refresh token verification failed")
+      }
+    }
+    } catch (err) {
+    console.error("Failed to verify tokens", err);
     }
   }
 
@@ -47,11 +43,13 @@ export async function middleware(req: NextRequest, res: NextResponse) {
 
   if (pathname === "/auth" && payload) {
     // Redirect to home page if already logged in
+    console.log('Already logged in, redirecting to home page.');
     return NextResponse.redirect(new URL("/", req.url));
   }
 
   if (pathname !== "/auth" && !payload) {
     // Redirect to login page if not logged in
+    console.log('Not logged in, redirecting to login page.');
     return NextResponse.redirect(new URL("/auth", req.url));
   }
 
@@ -62,4 +60,4 @@ export const config = {
   matcher: [
     "/((?!api|lib|_next/static|favicon.ico|icons|places_images).*)", // Match all paths except API routes and static files
   ],
-};
+}
