@@ -29,16 +29,14 @@ model Places {
   location   String
   hours_open String
   image      String
-  fields     Fields[]
-
+  bookings  Bookings[]
 }
 
-model Fields {
+model Bookings {
   id         Int       @id @default(autoincrement())
-  name       String
-  type       String
-  max_players Int
-  price_per_hour Float
+  date       DateTime
+  players    Int
+  field_id   Int
   place_id Int
   place Places @relation(fields: [place_id], references: [id])
 }

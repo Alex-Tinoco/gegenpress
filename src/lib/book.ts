@@ -1,5 +1,7 @@
 "use server";
 
+import { Booking } from "@models/bookings";
+
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
@@ -16,6 +18,17 @@ export async function getAllPlaces() {
     return await prisma.places.findMany();
   } catch (error) {
     console.error("Error fetching places:", error);
+    throw error;
+  }
+}
+
+export async function CreateBooking(booking: Booking) {
+  try {
+    return await prisma.bookings.create({
+      data: booking,
+    });
+  } catch (error) {
+    console.error("Error creating booking:", error);
     throw error;
   }
 }

@@ -4,45 +4,51 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 
 interface selectPlaceProps {
-    buttonTitle: string;
-    buttonClass?: string;
-    selectedPlace: Place | null;
-    setSelectedPlace: React.Dispatch<React.SetStateAction<Place | null>>;
+  buttonTitle: string;
+  buttonClass?: string;
+  selectedPlace: Place | null;
+  setSelectedPlace: React.Dispatch<React.SetStateAction<Place | null>>;
 }
 
-export const SelectPlace: React.FC<selectPlaceProps> = ({ selectedPlace, setSelectedPlace, buttonTitle, buttonClass }) => {
-    const [places, setPlaces] = useState<Place[]>([]);
-    const [modalOpen, setModalOpen] = useState(false);
+export const SelectPlace: React.FC<selectPlaceProps> = ({
+  selectedPlace,
+  setSelectedPlace,
+  buttonTitle,
+  buttonClass,
+}) => {
+  const [places, setPlaces] = useState<Place[]>([]);
+  const [modalOpen, setModalOpen] = useState(false);
 
-    async function fetchPlaces() {
-        try {
-          let placesfetched = await getAllPlaces();
-          setPlaces(placesfetched);
-        } catch (error) {
-          console.error("Error fetching places:", error);
-        }
-      }
+  async function fetchPlaces() {
+    try {
+      let placesfetched = await getAllPlaces();
+      setPlaces(placesfetched);
+    } catch (error) {
+      console.error("Error fetching places:", error);
+    }
+  }
 
-      useEffect(() => {
-        fetchPlaces();
-        console.log(places);
-      }, []);
+  useEffect(() => {
+    fetchPlaces();
+    console.log(places);
+  }, []);
 
-      useEffect(()=> {
-        if (selectedPlace)
-        setModalOpen(false);
-      }, [selectedPlace]);
+  useEffect(() => {
+    if (selectedPlace) setModalOpen(false);
+  }, [selectedPlace]);
 
-    return (
-    <div>
-      <button className={buttonClass ? (buttonClass) :("btn-primary bg-main hover:bg-main-darker")}
-      onClick={() => setModalOpen(true)}>
+  return (
+    <div className="justify-² w-fulls flex">
+      <button
+        className={`${buttonClass && buttonClass}`}
+        onClick={() => setModalOpen(true)}
+      >
         {buttonTitle}
       </button>
       {modalOpen && (
         <dialog className="modal" open={modalOpen}>
-          <div className="modal-box h-3/4 w-full max-w-2/3 overflow-scroll bg-light rounded-md">
-            <div className="flex flex-wrap items-center gap-6 justify-evenly">
+          <div className="modal-box bg-light h-3/4 w-full max-w-2/3 overflow-scroll rounded-md">
+            <div className="flex flex-wrap items-center justify-evenly gap-6">
               {places.map((place) => (
                 <div
                   className={`card h-80 w-72 shadow-sm ${place.name.startsWith("Urban") ? "bg-[#FF7832]" : "bg-[#2fbf6b]"}`}
@@ -62,12 +68,12 @@ export const SelectPlace: React.FC<selectPlaceProps> = ({ selectedPlace, setSele
                     <div className="card-actions mt-3 flex justify-center">
                       <button
                         onClick={() => setSelectedPlace(place)}
-                        className="btn-primary border-black hover:bg-gray-800 bg-black flex-1"
+                        className="btn-primary flex-1 border-black bg-black hover:bg-gray-800"
                       >
                         Choose
                       </button>
                       <Link
-                        className="btn bg-black hover:bg-gray-900 rounded-md p-1"
+                        className="btn rounded-md bg-black p-1 hover:bg-gray-900"
                         href={`https://www.google.com/maps?q=${place.location}`}
                         target="_blank"
                       >
@@ -89,7 +95,7 @@ export const SelectPlace: React.FC<selectPlaceProps> = ({ selectedPlace, setSele
         </dialog>
       )}
     </div>
-    );
+  );
 };
 
 export default SelectPlace;

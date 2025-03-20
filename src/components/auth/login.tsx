@@ -144,7 +144,7 @@ export default function Login() {
             <input
               type="text"
               placeholder="Enter your email"
-              className={`focus:border-dark w-full rounded-md border-1 border-gray-300 p-2 text-sm hover:bg-gray-200/60 ${errors.email && "border-1 border-red-500"}`}
+              className={`focus:border-dark w-full rounded-md border-1 border-gray-400 p-2 text-sm hover:bg-gray-200/60 ${errors.email && "border-1 border-red-500"}`}
               onChange={handleChange}
               name="email"
             />
@@ -183,7 +183,10 @@ export default function Login() {
             </span> */}
           </div>
 
-          <button type="submit" className="btn-primary w-full">
+          <button
+            type="submit"
+            className="btn-primary bg-main hover:bg-main-darker w-full"
+          >
             Sign in or register
           </button>
           <span className="text-md self-center text-center text-gray-700">
