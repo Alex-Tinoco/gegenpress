@@ -19,5 +19,13 @@
 }
 
 .btn-primary {
-  @apply bg-main hover:bg-main-darker flex cursor-pointer items-center justify-center rounded-md border-2 py-2 text-white;
+  @apply flex cursor-pointer items-center justify-center rounded-md px-4 py-2 text-white;
+}
+
+.btn-secondary {
+  @apply flex cursor-pointer items-center justify-center rounded-md bg-blue-500 px-4 py-2 text-xs text-white;
+}
+
+.center-flex {
+  @apply flex items-center justify-center;
 }

@@ -11,7 +11,7 @@ const secretKey = new TextEncoder().encode(process.env.JWT_SECRET_KEY!);
 export async function signAccessToken(payload: JWTPayload): Promise<string> {
   const jwt = new SignJWT(payload)
     .setProtectedHeader({ alg: 'HS256' })
-    .setExpirationTime("10s"); 
+    .setExpirationTime("1h"); 
 
   return await jwt.sign(secretKey);
 }
@@ -51,7 +51,7 @@ export function setTokenCookies(
           httpOnly: true,
           secure: process.env.NODE_ENV === "production",
           path: "/",
-          maxAge: 10, // 1 hour
+          maxAge: 60*60, // 1 hour
         })
       );
     }
@@ -75,7 +75,7 @@ export function setTokenCookies(
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         path: "/",
-        maxAge: 10, // 1 hour
+        maxAge: 60*60, // 1 hour
         sameSite: "strict",
       });
     }
