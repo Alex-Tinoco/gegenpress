@@ -14,6 +14,7 @@ model Users {
   password             Password?
   wrong_login_attempts String?
   role                 String    @default("user")
+  bookings             Bookings[]
 }
 
 model Password {
@@ -33,10 +34,11 @@ model Places {
 }
 
 model Bookings {
-  id         Int       @id @default(autoincrement())
+  id         String       @id @default(uuid())
   date       DateTime
   players    Int
-  field_id   Int
+  user_id    String
+  user       Users        @relation(fields: [user_id], references: [id])
   place_id Int
   place Places @relation(fields: [place_id], references: [id])
 }

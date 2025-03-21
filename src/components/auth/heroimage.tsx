@@ -3,8 +3,8 @@ import { IoFootballOutline } from "react-icons/io5";
 
 export default function HeroImage() {
   return (
-    <div className="h-full w-full bg-[url(/places_images/bg.jpg)] bg-cover">
-      <div className="light from-dark/100 to-dark/50 bg-op flex h-screen w-full flex-col items-center justify-center gap-6 bg-gradient-to-t font-semibold">
+    <div className="h-full w-full bg-[url(/backgrounds/authbg.jpg)] bg-cover">
+      <div className="light from-dark/100 to-dark/50 flex h-screen w-full flex-col items-center justify-center gap-6 bg-gradient-to-t font-semibold">
         <IoFootballOutline className="text-light h-32 w-32" />
         <h1 className="flex flex-row gap-2 px-5 text-center text-4xl shadow-xl">
           <span className="text-light font-extrabold">

@@ -38,7 +38,7 @@ export const SelectPlace: React.FC<selectPlaceProps> = ({
   }, [selectedPlace]);
 
   return (
-    <div className="justify-² w-fulls flex">
+    <div className="flex w-full justify-end">
       <button
         className={`${buttonClass && buttonClass}`}
         onClick={() => setModalOpen(true)}
@@ -56,7 +56,7 @@ export const SelectPlace: React.FC<selectPlaceProps> = ({
                 >
                   <figure>
                     <img
-                      src={`/places_images/${place.image}`}
+                      src={`/places/${place.image}`}
                       alt={place.name}
                       className="h-auto w-72"
                     />

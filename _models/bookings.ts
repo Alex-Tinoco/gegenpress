@@ -10,5 +10,4 @@ export interface Booking {
   date: Date;
   players: number;
   place_id: number;
-  place: Place;
 }

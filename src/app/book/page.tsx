@@ -9,7 +9,7 @@ export default function BookPage() {
   const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>();
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
-  const [playersCounter, setPlayersCounter] = useState(0);
+  const [playersCounter, setPlayersCounter] = useState(10);
   const maxPlayers = 10;
 
   const today = new Date();
@@ -30,10 +30,10 @@ export default function BookPage() {
       date: selectedDate,
       players: playersCounter,
       place_id: selectedPlace.id,
-      place: selectedPlace,
     };
 
     try {
+      console.log(bookingdata);
       await CreateBooking(bookingdata);
       alert("Booking created successfully");
     } catch (error) {
@@ -43,129 +43,132 @@ export default function BookPage() {
   };
 
   return (
-    <div className="flex h-screen w-full flex-col items-center justify-center gap-6 bg-gradient-to-t from-indigo-100 to-indigo-50 font-semibold">
-      <h1 className="text-main px-5 text-center text-4xl">Book a field</h1>
-      <div className="card bg-base-100 w-1/3 rounded-md shadow-lg">
-        <figure>
-          <img
-            src={
-              selectedPlace?.image
-                ? `/places_images/${selectedPlace.image}`
-                : "/places_images/vector.jpg"
-            }
-            alt={
-              selectedPlace?.name
-                ? `/places_images/${selectedPlace.image}`
-                : "No field"
-            }
-            className="max-h-96 w-full rounded-t-md"
-          />
-        </figure>
-        <div className="card-body">
-          <h2 className="card-title">
-            {selectedPlace ? (
-              <div className="flex w-full flex-row items-center">
-                <h2 className="w-full">{selectedPlace.name}</h2>
+    <div className="w-sceen h-screen bg-[url(/backgrounds/bgstadium.jpg)] bg-cover">
+      <div className="from-dark/100 to-dark/50 flex h-screen w-screen flex-col items-center justify-center gap-6 bg-gradient-to-t font-semibold backdrop-blur-xs">
+        <h1 className="text-main px-5 text-center text-4xl">Book a field</h1>
+        <div className="card bg-light rounded-md shadow-lg lg:w-1/3">
+          <figure>
+            <img
+              src={
+                selectedPlace?.image
+                  ? `/places/${selectedPlace.image}`
+                  : "/backgrounds/vector.jpg"
+              }
+              alt={
+                selectedPlace?.name
+                  ? `/places/${selectedPlace.image}`
+                  : "No field"
+              }
+              className="max-h-96 w-full rounded-t-md"
+            />
+          </figure>
+          <div className="card-body">
+            <h2 className="card-title">
+              {selectedPlace ? (
+                <div className="flex w-full flex-row items-center">
+                  <h2 className="w-full">{selectedPlace.name}</h2>
+                  <SelectPlace
+                    buttonTitle="Change field"
+                    buttonClass="btn-secondary self-end"
+                    selectedPlace={selectedPlace}
+                    setSelectedPlace={setSelectedPlace}
+                  />
+                </div>
+              ) : (
                 <SelectPlace
-                  buttonTitle="Change field"
-                  buttonClass="btn-secondary self-end"
+                  buttonTitle="Select a field"
+                  buttonClass="btn-primary bg-dark hover:bg-gray-700 w-full"
                   selectedPlace={selectedPlace}
                   setSelectedPlace={setSelectedPlace}
                 />
-              </div>
-            ) : (
-              <SelectPlace
-                buttonTitle="Select a field"
-                buttonClass="btn-primary bg-dark hover:bg-gray-700 w-full"
-                selectedPlace={selectedPlace}
-                setSelectedPlace={setSelectedPlace}
-              />
-            )}
-          </h2>
-          <div className="bg-dark text-light flex w-full flex-col items-center justify-evenly rounded-md lg:flex-row">
-            <div
-              className={`center-flex gap-2 ${selectedDate && "flex-col gap-2"}`}
-            >
-              <h2 className="text-xl">
-                Date : {selectedDate?.toLocaleDateString()}
-              </h2>
-              <button
-                popoverTarget="rdp-popover"
-                className="btn-secondary"
-                style={{ anchorName: "--rdp" } as React.CSSProperties}
-                onClick={() => setIsCalendarOpen(true)}
-              >
-                {selectedDate ? "Change date" : "Pick a date"}
-              </button>
-              {isCalendarOpen && (
-                <div
-                  popover="auto"
-                  id="rdp-popover"
-                  className="dropdown bg-dark rounded-md p-4"
-                  style={{ positionAnchor: "--rdp" } as React.CSSProperties}
-                >
-                  <DayPicker
-                    className="react-day-picker text-light"
-                    classNames={{
-                      day: "text-lg hover:text-gray-400",
-                      selected: "text-main",
-                      month_caption:
-                        "text-lg m-auto flex items-center justify-center",
-                      weekday: "text-xl",
-                      button_next: "fill-main mb-4",
-                      button_previous: "fill-main mb-4",
-                    }}
-                    mode="single"
-                    selected={selectedDate}
-                    onSelect={handleDayClick}
-                    disabled={{
-                      before: today,
-                      after: twoMonthsAfter,
-                    }}
-                    required
-                  />
-                </div>
               )}
-            </div>
-            <div className="center-flex bg-dark text-light flex-col rounded-md p-4 text-xl">
-              <h2 className="flex gap-2 text-2xl">
-                <span
-                  className={
-                    playersCounter < 2
-                      ? "text-main select-none"
-                      : "cursor-pointer select-none"
-                  }
-                  onClick={() => {
-                    playersCounter > 1 && setPlayersCounter(playersCounter - 1);
-                  }}
+            </h2>
+            <div className="bg-dark text-light flex w-full flex-col items-center justify-evenly rounded-md lg:flex-row">
+              <div
+                className={`center-flex mt-3.5 gap-2 lg:mt-0 ${selectedDate && "flex-col"}`}
+              >
+                <h2 className="text-xl">
+                  Date : {selectedDate?.toLocaleDateString()}
+                </h2>
+                <button
+                  popoverTarget="rdp-popover"
+                  className="btn-secondary"
+                  style={{ anchorName: "--rdp" } as React.CSSProperties}
+                  onClick={() => setIsCalendarOpen(true)}
                 >
-                  -
-                </span>
-                {playersCounter}
-                <span
-                  className={
-                    playersCounter == maxPlayers
-                      ? "text-main select-none"
-                      : "cursor-pointer select-none"
-                  }
-                  onClick={() => {
-                    playersCounter < maxPlayers &&
-                      setPlayersCounter(playersCounter + 1);
-                  }}
-                >
-                  +
-                </span>
-              </h2>
-              <h2 className="">Player{playersCounter > 1 && "s"}</h2>
+                  {selectedDate ? "Change date" : "Pick a date"}
+                </button>
+                {isCalendarOpen && (
+                  <div
+                    popover="auto"
+                    id="rdp-popover"
+                    className="dropdown bg-dark rounded-md p-4"
+                    style={{ positionAnchor: "--rdp" } as React.CSSProperties}
+                  >
+                    <DayPicker
+                      className="react-day-picker text-light"
+                      classNames={{
+                        day: "text-lg hover:text-gray-400",
+                        selected: "text-main",
+                        month_caption:
+                          "text-lg m-auto flex items-center justify-center",
+                        weekday: "text-xl",
+                        button_next: "fill-main mb-4",
+                        button_previous: "fill-main mb-4",
+                      }}
+                      mode="single"
+                      selected={selectedDate}
+                      onSelect={handleDayClick}
+                      disabled={{
+                        before: today,
+                        after: twoMonthsAfter,
+                      }}
+                      required
+                    />
+                  </div>
+                )}
+              </div>
+              <div className="center-flex bg-dark text-light flex-col rounded-md p-4 text-xl">
+                <h2 className="flex gap-2 text-2xl">
+                  <span
+                    className={
+                      playersCounter < 2
+                        ? "text-main select-none"
+                        : "cursor-pointer select-none"
+                    }
+                    onClick={() => {
+                      playersCounter > 1 &&
+                        setPlayersCounter(playersCounter - 1);
+                    }}
+                  >
+                    -
+                  </span>
+                  {playersCounter}
+                  <span
+                    className={
+                      playersCounter == maxPlayers
+                        ? "text-main select-none"
+                        : "cursor-pointer select-none"
+                    }
+                    onClick={() => {
+                      playersCounter < maxPlayers &&
+                        setPlayersCounter(playersCounter + 1);
+                    }}
+                  >
+                    +
+                  </span>
+                </h2>
+                <h2 className="">Player{playersCounter > 1 && "s"}</h2>
+              </div>
             </div>
-          </div>
-          <div className="card-actions tooltip tooltip-error tooltip-bottom justify-center rounded-md">
-            <button
-              className="btn-primary bg-main hover:bg-main-darker w-full"
-              onClick={handleBooking}
-            >
-              Book
-            </button>
+            <div className="card-actions tooltip tooltip-error tooltip-bottom justify-center rounded-md">
+              <button
+                className="btn-primary bg-main hover:bg-main-darker w-full"
+                onClick={handleBooking}
+              >
+                Book
+              </button>
+            </div>
           </div>
         </div>
       </div>
