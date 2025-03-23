@@ -1,8 +1,6 @@
 "use client";
 
-import Bento from "@/components/bento";
 import Link from "next/link";
-import { MouseEventHandler, useState } from "react";
 
 export default function Home() {
   const LogOut = async () => {

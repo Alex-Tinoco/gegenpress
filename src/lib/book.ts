@@ -24,8 +24,15 @@ export async function getAllPlaces() {
 
 export async function CreateBooking(booking: Booking) {
   try {
+    console.log("Creating booking:", booking);
+
     return await prisma.bookings.create({
-      data: booking,
+      data: {
+        date: booking.date,
+        players: booking.players,
+        user_id: booking.user_id,
+        place_id: booking.place_id,
+      },
     });
   } catch (error) {
     console.error("Error creating booking:", error);

@@ -1,6 +1,6 @@
 import WeatherGeoSearch from "@/components/weather/geosearch";
 
-export default async function WeatherPage() {
+export default function WeatherPage() {
   return (
     <div>
       <WeatherGeoSearch />

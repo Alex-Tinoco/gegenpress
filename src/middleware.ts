@@ -1,60 +1,70 @@
 import { NextRequest, NextResponse } from "next/server";
-import { JWTPayload, jwtVerify } from "jose";
 import {
   accessTokenVerification,
-  deleteAuthCookies,
   refreshAccessToken,
-  setTokenCookies,
-  signAccessToken,
 } from "./lib/auth/jwtfunctions";
-import { Payload } from "@models/authmodel";
 
-export async function middleware(req: NextRequest, res: NextResponse) {
-  const secretKey = process.env.JWT_SECRET_KEY!;
+export async function middleware(req: NextRequest) {
   const pathname = req.nextUrl.pathname;
-
   // Get tokens from cookies
   const accessToken = req.cookies.get("access_token")?.value;
   const refreshToken = req.cookies.get("refresh_token")?.value;
-  let payload: JWTPayload | undefined = undefined;
-  let validAccess = false;
+  let payload: Object | undefined = undefined;
+  let response = NextResponse.next(); // Create response object first
 
   if (accessToken || refreshToken) {
-    try {
-      if (accessToken) {
-        try {
-          payload = await accessTokenVerification(accessToken);
-          console.log("Access token verified");
-          validAccess = true;
-        } catch (err) {
-          console.log("Access token verification failed");
+    if (accessToken) {
+      payload = await accessTokenVerification(accessToken);
+      if (payload) {
+        console.log("Access token verified");
+      } else {
+        console.log("Access token verification failed");
+
+        // Try refresh token if access token failed
+        if (refreshToken) {
+          payload = await refreshAccessToken(response, refreshToken);
+          if (payload) {
+            console.log("Refreshed access token");
+          } else {
+            console.log("Refresh token verification failed");
+          }
         }
       }
-      if (!validAccess && refreshToken) {
-        try {
-          payload = await refreshAccessToken(res, refreshToken);
-          console.log("Refreshed access token");
-        } catch (err) {
-          console.log("Refresh token verification failed");
-        }
+    } else if (refreshToken) {
+      // Only have refresh token
+      payload = await refreshAccessToken(response, refreshToken);
+      if (payload) {
+        console.log("Refreshed access token");
+      } else {
+        console.log("Refresh token verification failed");
       }
-    } catch (err) {
-      console.error("Failed to verify tokens", err);
     }
   }
 
-  const redirect = (url?: string, payload?: JWTPayload) => {
-    let response: NextResponse;
+  const redirect = (url?: string, payload?: Object) => {
+    let finalResponse: NextResponse;
+
     if (url) {
-      response = NextResponse.redirect(new URL(url, req.url));
+      finalResponse = NextResponse.redirect(new URL(url, req.url));
     } else {
-      response = NextResponse.next();
+      finalResponse = response;
     }
+
     if (payload) {
-      response.cookies.set("payload", JSON.stringify(payload));
+      finalResponse.cookies.set("payload", JSON.stringify(payload), {
+        httpOnly: false,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+        path: "/",
+      });
     }
-    return response;
+
+    return finalResponse;
   };
+
+  if (pathname === "/") {
+    return NextResponse.next();
+  }
 
   if (pathname === "/auth" && payload) {
     // Redirect to home page if already logged in
@@ -64,16 +74,15 @@ export async function middleware(req: NextRequest, res: NextResponse) {
 
   if (pathname !== "/auth" && !payload) {
     // Redirect to login page if not logged in
-
     console.log("Not logged in, redirecting to login page.");
     return redirect("/auth");
   }
 
-  return NextResponse.next();
+  return redirect(undefined, payload);
 }
 
 export const config = {
   matcher: [
-    "/((?!api|lib|_next/static|favicon.ico|icons|backgrounds|places).*)", // Match all paths except API routes and static files
+    "/((?!api|lib|_next/static|favicon.ico|icons|backgrounds|places).*)",
   ],
 };

@@ -2,16 +2,14 @@ import { NextRequest, NextResponse } from "next/server";
 import { jwtVerify, SignJWT, JWTPayload } from "jose";
 import cookie from "cookie";
 import { NextApiResponse } from "next";
-import { Payload } from "@models/authmodel";
 
-// Secret key encoded in Uint8Array
 const secretKey = new TextEncoder().encode(process.env.JWT_SECRET_KEY!);
 
 // Access Token Creation
 export async function signAccessToken(payload: JWTPayload): Promise<string> {
   const jwt = new SignJWT(payload)
-    .setProtectedHeader({ alg: 'HS256' })
-    .setExpirationTime("1h"); 
+    .setProtectedHeader({ alg: "HS256" })
+    .setExpirationTime("30m");
 
   return await jwt.sign(secretKey);
 }
@@ -19,8 +17,8 @@ export async function signAccessToken(payload: JWTPayload): Promise<string> {
 // Refresh Token Creation
 export async function signRefreshToken(payload: JWTPayload): Promise<string> {
   const jwt = new SignJWT(payload)
-    .setProtectedHeader({ alg: 'HS256' }) 
-    .setExpirationTime("15d"); 
+    .setProtectedHeader({ alg: "HS256" })
+    .setExpirationTime("15d");
 
   return await jwt.sign(secretKey);
 }
@@ -39,7 +37,7 @@ export async function verifyToken(token: string): Promise<JWTPayload> {
 export function setTokenCookies(
   res: NextApiResponse | NextResponse,
   accessToken?: string,
-  refreshToken?: string
+  refreshToken?: string,
 ) {
   if ("setHeader" in res) {
     // For API routes (NextApiResponse)
@@ -51,8 +49,8 @@ export function setTokenCookies(
           httpOnly: true,
           secure: process.env.NODE_ENV === "production",
           path: "/",
-          maxAge: 60*60, // 1 hour
-        })
+          maxAge: 30 * 60,
+        }),
       );
     }
 
@@ -63,7 +61,7 @@ export function setTokenCookies(
           secure: process.env.NODE_ENV === "production",
           path: "/",
           maxAge: 60 * 60 * 24 * 15, // 15 days
-        })
+        }),
       );
     }
 
@@ -75,7 +73,7 @@ export function setTokenCookies(
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         path: "/",
-        maxAge: 60*60, // 1 hour
+        maxAge: 30 * 60,
         sameSite: "strict",
       });
     }
@@ -85,7 +83,7 @@ export function setTokenCookies(
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         path: "/",
-        maxAge: 60 * 60 * 24 * 15, // 15 days
+        maxAge: 60 * 60 * 24 * 15,
         sameSite: "strict",
       });
     }
@@ -109,6 +107,12 @@ export function deleteAuthCookies(res: NextApiResponse | NextResponse) {
         expires: new Date(0),
         path: "/",
       }),
+      cookie.serialize("payload", "", {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        expires: new Date(0),
+        path: "/",
+      }),
     ]);
   } else {
     // For middleware (NextResponse)
@@ -125,39 +129,47 @@ export function deleteAuthCookies(res: NextApiResponse | NextResponse) {
       expires: new Date(0),
       path: "/",
     });
-  }
-}
-  
-export async function accessTokenVerification (accessToken: string) {
-  try {
-    const { payload: accessTokenPayload } = await jwtVerify(
-      accessToken,
-      secretKey
-    );
-    return accessTokenPayload;
-  } catch (error) {
-    console.error("Access token verification failed", error);
+
+    res.cookies.set("payload", "", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      expires: new Date(0),
+      path: "/",
+    });
   }
 }
 
-export async function refreshAccessToken (res: NextResponse,refresh_token: string) {
+export async function accessTokenVerification(accessToken: string) {
+  try {
+    const { payload: accessTokenPayload } = await jwtVerify(
+      accessToken,
+      secretKey,
+    );
+    return accessTokenPayload;
+  } catch (error) {
+    throw new Error("Access token verification failed");
+  }
+}
+
+export async function refreshAccessToken(
+  res: NextResponse,
+  refresh_token: string,
+) {
   try {
     const { payload: refreshTokenPayload } = await jwtVerify(
       refresh_token,
-      secretKey
+      secretKey,
     );
     const accessToken = await signAccessToken(refreshTokenPayload);
-    setTokenCookies(res, accessToken, undefined);    
+    setTokenCookies(res, accessToken, undefined);
     return refreshTokenPayload;
   } catch (error) {
     console.error("Access token verification failed", error);
   }
 }
 
-
-
-export function expiredTokenLogOut (req: NextRequest ,res: NextResponse) {
+export function expiredTokenLogOut(req: NextRequest, res: NextResponse) {
   deleteAuthCookies(res);
-  console.log("Refresh token expired, redirecting to login page.")
+  console.log("Refresh token expired, redirecting to login page.");
   return NextResponse.redirect(new URL("/auth", req.url));
-} 
+}

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 
 interface selectPlaceProps {
+  places: Place[];
   buttonTitle: string;
   buttonClass?: string;
   selectedPlace: Place | null;
@@ -11,28 +12,13 @@ interface selectPlaceProps {
 }
 
 export const SelectPlace: React.FC<selectPlaceProps> = ({
+  places,
   selectedPlace,
   setSelectedPlace,
   buttonTitle,
   buttonClass,
 }) => {
-  const [places, setPlaces] = useState<Place[]>([]);
   const [modalOpen, setModalOpen] = useState(false);
-
-  async function fetchPlaces() {
-    try {
-      let placesfetched = await getAllPlaces();
-      setPlaces(placesfetched);
-    } catch (error) {
-      console.error("Error fetching places:", error);
-    }
-  }
-
-  useEffect(() => {
-    fetchPlaces();
-    console.log(places);
-  }, []);
-
   useEffect(() => {
     if (selectedPlace) setModalOpen(false);
   }, [selectedPlace]);
