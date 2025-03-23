@@ -2,13 +2,13 @@ import { NextRequest, NextResponse } from "next/server";
 import {
   accessTokenVerification,
   refreshAccessToken,
-} from "./lib/auth/jwtfunctions";
+} from "@/lib/jwtfunctions";
 
 export async function middleware(req: NextRequest) {
   const pathname = req.nextUrl.pathname;
   // Get tokens from cookies
-  const accessToken = req.cookies.get("access_token")?.value;
-  const refreshToken = req.cookies.get("refresh_token")?.value;
+  const accessToken = req.cookies.get("accessToken")?.value;
+  const refreshToken = req.cookies.get("refreshToken")?.value;
   let payload: Object | undefined = undefined;
   let response = NextResponse.next(); // Create response object first
 

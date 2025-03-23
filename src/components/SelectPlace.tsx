@@ -1,4 +1,4 @@
-import { getAllPlaces } from "@/lib/book";
+import { getAllPlaces } from "@/lib/bookdb";
 import { Place } from "@models/bookings";
 import Link from "next/link";
 import { useEffect, useState } from "react";

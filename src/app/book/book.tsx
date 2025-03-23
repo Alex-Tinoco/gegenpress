@@ -1,6 +1,6 @@
 "use client";
 import { SelectPlace } from "@/components/SelectPlace";
-import { CreateBooking } from "@/lib/book";
+import { CreateBooking } from "@/lib/bookdb";
 import { Payload } from "@models/authmodel";
 import { Booking, Place } from "@models/bookings";
 import { useEffect, useState } from "react";

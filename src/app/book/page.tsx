@@ -2,7 +2,7 @@
 "use server";
 import { cookies } from "next/headers"; // Import cookies from next/headers
 import BookComponent from "./book"; // Client-side component (book)
-import { getAllPlaces } from "@/lib/book";
+import { getAllPlaces } from "@/lib/bookdb";
 import { Place } from "@models/bookings";
 import { Payload } from "@models/authmodel";
 import { NextResponse } from "next/server";

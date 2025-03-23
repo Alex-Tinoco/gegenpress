@@ -45,18 +45,18 @@ export function setTokenCookies(
 
     if (accessToken) {
       cookies.push(
-        cookie.serialize("access_token", accessToken, {
+        cookie.serialize("accessToken", accessToken, {
           httpOnly: true,
           secure: process.env.NODE_ENV === "production",
           path: "/",
-          maxAge: 30 * 60,
+          maxAge: 60 * 60,
         }),
       );
     }
 
     if (refreshToken) {
       cookies.push(
-        cookie.serialize("refresh_token", refreshToken, {
+        cookie.serialize("refreshToken", refreshToken, {
           httpOnly: true,
           secure: process.env.NODE_ENV === "production",
           path: "/",
@@ -69,7 +69,7 @@ export function setTokenCookies(
   } else {
     // For middleware (NextResponse)
     if (accessToken) {
-      res.cookies.set("access_token", accessToken, {
+      res.cookies.set("accessToken", accessToken, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         path: "/",
@@ -79,7 +79,7 @@ export function setTokenCookies(
     }
 
     if (refreshToken) {
-      res.cookies.set("refresh_token", refreshToken, {
+      res.cookies.set("refreshToken", refreshToken, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         path: "/",
@@ -95,13 +95,13 @@ export function deleteAuthCookies(res: NextApiResponse | NextResponse) {
   if ("setHeader" in res) {
     // For API routes (NextApiResponse)
     res.setHeader("Set-Cookie", [
-      cookie.serialize("access_token", "", {
+      cookie.serialize("accessToken", "", {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         expires: new Date(0),
         path: "/",
       }),
-      cookie.serialize("refresh_token", "", {
+      cookie.serialize("refreshToken", "", {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         expires: new Date(0),
@@ -116,14 +116,14 @@ export function deleteAuthCookies(res: NextApiResponse | NextResponse) {
     ]);
   } else {
     // For middleware (NextResponse)
-    res.cookies.set("access_token", "", {
+    res.cookies.set("accessToken", "", {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       expires: new Date(0),
       path: "/",
     });
 
-    res.cookies.set("refresh_token", "", {
+    res.cookies.set("refreshToken", "", {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       expires: new Date(0),
@@ -153,11 +153,11 @@ export async function accessTokenVerification(accessToken: string) {
 
 export async function refreshAccessToken(
   res: NextResponse,
-  refresh_token: string,
+  refreshToken: string,
 ) {
   try {
     const { payload: refreshTokenPayload } = await jwtVerify(
-      refresh_token,
+      refreshToken,
       secretKey,
     );
     const accessToken = await signAccessToken(refreshTokenPayload);
