@@ -60,11 +60,11 @@ Cette application web permet aux utilisateurs de réserver des terrains sportifs
 
 ## Modèle Conceptuel de Données (MCD)
 
-![Modèle Conceptuel de Données](./public/images/mcd1.png)
+![Modèle Conceptuel de Données](./public/readme/mcd1.png)
 
 ## Diagramme de Cas d'Utilisation
 
-![Diagramme de Cas d'Utilisation](./public/images/usecase1.png)
+![Diagramme de Cas d'Utilisation](./public/readme/usecase1.png)
 
 ## Technologies utilisées
 
