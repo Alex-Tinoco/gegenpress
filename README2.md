@@ -1,7 +1,5 @@
 # Application de Réservation de Terrains Sportifs
 
-##[Voir le README du second contexte](./README2.md)
-
 ## Présentation
 
 Cette application web permet aux utilisateurs de réserver des terrains sportifs et de participer à des matchs organisés par d'autres joueurs. Développée dans le cadre du BTS SIO option SLAM, elle offre une interface simple pour la gestion des réservations sportives.
