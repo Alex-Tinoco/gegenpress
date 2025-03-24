@@ -1,6 +1,6 @@
-# Second contexte : Application de Coach
+# # Premier contexte : Réservation de Terrains Sportifs
 
-[Voir le README du premier contexte](./README1.md)
+[Voir le README du second contexte](./README2.md)
 
 ## Présentation
 
