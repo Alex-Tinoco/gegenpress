@@ -1,10 +1,9 @@
 "use client";
 import Profile from "@/components/profile";
-import { SelectPlace } from "@/components/SelectPlace";
-import { CreateBooking } from "@/lib/bookdb";
 import {
   CalendarDaysIcon,
   CalendarIcon,
+  ShieldCheckIcon,
   UserCircleIcon,
   UserIcon,
 } from "@heroicons/react/24/solid";
@@ -14,7 +13,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { DayPicker } from "react-day-picker";
 
-interface BookProps {
+interface ProfileProps {
   payload: Payload;
   places: Place[];
   userInfo: Account;
@@ -24,8 +23,8 @@ export default function ProfileComponent({
   payload,
   places,
   userInfo,
-}: BookProps) {
-  const [selectedTab, setSelectedTab] = useState(2);
+}: ProfileProps) {
+  const [selectedTab, setSelectedTab] = useState(0);
 
   const maxPlayers = 10;
   const today = new Date();
@@ -66,8 +65,8 @@ export default function ProfileComponent({
         >
           {" "}
           <a>
-            <UserIcon className="h-6 w-6" />
-            <span className="text-lg">?</span>
+            <ShieldCheckIcon className="h-6 w-6" />
+            <span className="text-lg">Security</span>
           </a>
         </li>
       </ul>

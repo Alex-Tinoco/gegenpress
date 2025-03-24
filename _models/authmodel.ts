@@ -3,10 +3,11 @@ import { JWTPayload } from "jose";
 export interface Account {
   name: string;
   email: string;
-  password: string;
+  password?: string;
   gender?: string;
-  birthdate?: string;
+  birthdate?: Date;
   country?: string;
+  city?: string;
   createdAt?: Date;
   memory?: boolean | undefined;
 }

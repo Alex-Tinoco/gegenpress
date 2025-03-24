@@ -16,7 +16,9 @@ model Users {
   gender               String?
   birthdate            DateTime?
   country              String?
+  city                String?
   createdAt            DateTime  @default(now())
+  lastUpdated          DateTime  @updatedAt
   role                 String    @default("user")
   bookings             Bookings[]
 }

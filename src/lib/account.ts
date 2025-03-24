@@ -28,7 +28,15 @@ export async function createAccount(data: Account) {
 export async function findUserByEmail(email: string) {
   return await prisma.users.findUnique({
     where: {
-      email: email,
+      email,
+    },
+  });
+}
+
+export async function findUserById(id: string) {
+  return await prisma.users.findUnique({
+    where: {
+      id,
     },
   });
 }
@@ -45,5 +53,14 @@ export async function retrievePassword(id: string) {
         },
       },
     },
+  });
+}
+
+export async function editUserData(id: string, data: Account) {
+  return await prisma.users.update({
+    where: {
+      id: id,
+    },
+    data: data,
   });
 }

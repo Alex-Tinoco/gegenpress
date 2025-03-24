@@ -1,10 +1,12 @@
 import {
   createAccount,
+  editUserData,
   findUserByEmail,
+  findUserById,
   retrievePassword,
 } from "@/lib/account";
 import { signAccessToken, signRefreshToken } from "@/lib/jwtfunctions";
-import { Payload } from "@models/authmodel";
+import { Account, Payload } from "@models/authmodel";
 import { NextRequest, NextResponse } from "next/server";
 const bcrypt = require("bcryptjs");
 
@@ -21,6 +23,10 @@ export async function POST(req: NextRequest) {
 
       case "logOut":
         return await handleLogOut();
+
+      case "editAccount":
+        let { id, ...userData } = data;
+        return await HandleEditingAccount(id, userData);
 
       default:
         return new NextResponse(null, { status: 405 });
@@ -158,6 +164,40 @@ async function handleLogOut() {
     return response;
   } catch (error) {
     console.error("Error logging out:", error);
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 },
+    );
+  }
+}
+
+async function HandleEditingAccount(id: string, data: Account) {
+  try {
+    console.log("Executing editAccount");
+
+    const user = await findUserById(id);
+    if (!user) {
+      return NextResponse.json(
+        { error: "Conflict: User does not exist" },
+        { status: 409 },
+      );
+    } else {
+      try {
+        await editUserData(id, data);
+        return NextResponse.json(
+          { message: "Account updated" },
+          { status: 200 },
+        );
+      } catch (error) {
+        console.error("Error updating account:", error);
+        return NextResponse.json(
+          { error: "Internal Server Error" },
+          { status: 500 },
+        );
+      }
+    }
+  } catch (error) {
+    console.error("Error editing account:", error);
     return NextResponse.json(
       { error: "Internal Server Error" },
       { status: 500 },
