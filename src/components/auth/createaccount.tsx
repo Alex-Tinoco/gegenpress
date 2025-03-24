@@ -1,7 +1,4 @@
-import { createAccount } from "@/lib/auth/accountdb";
-import { EyeIcon, EyeSlashIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import { Account } from "@models/authmodel";
-import { useRouter } from "next/navigation";
 import React, { FormEvent, useEffect, useState } from "react";
 import PasswordInput from "./PasswordInput";
 import { toast } from "react-toastify";

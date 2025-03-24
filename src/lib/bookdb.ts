@@ -5,14 +5,6 @@ import { Booking } from "@models/bookings";
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
-export async function findUserByEmail(email: string) {
-  return await prisma.users.findUnique({
-    where: {
-      email: email,
-    },
-  });
-}
-
 export async function getAllPlaces() {
   try {
     return await prisma.places.findMany();
@@ -36,6 +28,19 @@ export async function CreateBooking(booking: Booking) {
     });
   } catch (error) {
     console.error("Error creating booking:", error);
+    throw error;
+  }
+}
+
+export async function getUserBookings(user_id: string) {
+  try {
+    return await prisma.bookings.findMany({
+      where: {
+        user_id: user_id,
+      },
+    });
+  } catch (error) {
+    console.error("Error fetching bookings:", error);
     throw error;
   }
 }

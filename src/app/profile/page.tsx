@@ -1,22 +1,24 @@
 // app/book/page.tsx
 "use server";
 import { cookies } from "next/headers"; // Import cookies from next/headers
-import BookComponent from "./book";
+import ProfileComponent from "./profile"; // Client-side component (book)
 import { getAllPlaces } from "@/lib/bookdb";
 import { Place } from "@models/bookings";
 import { Payload } from "@models/authmodel";
 import { NextResponse } from "next/server";
+import { findUserByEmail } from "@/lib/account";
 
-// This is the server-side handler, no useState here
-export default async function BookPage(req: Request) {
+export default async function ProfilePage(req: Request) {
+  //payload get
   const cookieStore = await cookies();
   const cookieValue = cookieStore.get("payload")?.value;
 
   if (!cookieValue) {
     return NextResponse.redirect(new URL("/auth", req.url));
   }
-
   const parsedPayload: Payload = JSON.parse(cookieValue);
+
+  const userInfo = await findUserByEmail(parsedPayload.email);
 
   let places: Place[] = [];
   try {
@@ -27,7 +29,11 @@ export default async function BookPage(req: Request) {
 
   return (
     <div>
-      <BookComponent payload={parsedPayload} places={places} />
+      <ProfileComponent
+        payload={parsedPayload}
+        places={places}
+        userInfo={userInfo}
+      />
     </div>
   );
 }

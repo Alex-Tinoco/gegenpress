@@ -13,6 +13,10 @@ model Users {
   email                String    @unique
   password             Password?
   wrong_login_attempts String?
+  gender               String?
+  birthdate            DateTime?
+  country              String?
+  createdAt            DateTime  @default(now())
   role                 String    @default("user")
   bookings             Bookings[]
 }

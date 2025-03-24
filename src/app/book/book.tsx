@@ -3,6 +3,8 @@ import { SelectPlace } from "@/components/SelectPlace";
 import { CreateBooking } from "@/lib/bookdb";
 import { Payload } from "@models/authmodel";
 import { Booking, Place } from "@models/bookings";
+import { useRouter } from "next/navigation";
+import Router from "next/router";
 import { useEffect, useState } from "react";
 import { DayPicker } from "react-day-picker";
 
@@ -11,15 +13,17 @@ interface BookProps {
   places: Place[];
 }
 
-export default function Book({ payload, places }: BookProps) {
+export default function BookComponent({ payload, places }: BookProps) {
   const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>();
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [playersCounter, setPlayersCounter] = useState(10);
+
   const maxPlayers = 10;
   const today = new Date();
   const twoMonthsAfter = new Date(today);
   twoMonthsAfter.setMonth(today.getMonth() + 2);
+  const router = useRouter();
 
   const handleDayClick = (date: Date) => {
     setSelectedDate(date);
@@ -45,7 +49,8 @@ export default function Book({ payload, places }: BookProps) {
     try {
       console.log(bookingdata);
       await CreateBooking(bookingdata);
-      alert("Booking created successfully");
+      //redirect to validation page
+      router.push("/");
     } catch (error) {
       console.error("Error creating booking:", error);
       alert("An error occurred while creating the booking.");
@@ -53,7 +58,7 @@ export default function Book({ payload, places }: BookProps) {
   };
 
   return (
-    <div className="w-sceen h-screen bg-[url(/backgrounds/bgstadium.jpg)] bg-cover">
+    <div className="h-screen w-screen bg-[url(/backgrounds/bgstadium.jpg)] bg-cover">
       <div className="from-dark/100 to-dark/50 flex h-screen w-screen flex-col items-center justify-center gap-6 bg-gradient-to-t font-semibold backdrop-blur-xs">
         <h1 className="text-main px-5 text-center text-4xl">Book a field</h1>
         <div className="card bg-light rounded-md shadow-lg lg:w-1/3">
