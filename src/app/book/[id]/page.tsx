@@ -3,15 +3,24 @@
 import { getBookingById, getPlaceById } from "@/lib/bookdb";
 import { Booking, Place } from "@models/bookings";
 import BookingInfoComponent from "./booking";
+import { cookies } from "next/headers";
+import { Payload } from "@models/authmodel";
 // This is the server-side handler, no useState here
 export default async function BookingInfoPage({
   params,
 }: {
   params: { id: string };
 }) {
+  let payload: Payload | undefined = undefined;
+  const cookieStore = await cookies();
+  const cookieValue = cookieStore.get("payload")?.value;
+  if (cookieValue) {
+    payload = JSON.parse(cookieValue);
+  }
+
   let booking: Booking | undefined = undefined;
   try {
-    const { id } = params;
+    const { id } = await params;
     booking = await getBookingById(id);
   } catch (error) {
     console.error("Error fetching booking:", error);
@@ -29,8 +38,8 @@ export default async function BookingInfoPage({
   }
 
   return (
-    <div>
-      <BookingInfoComponent place={place} booking={booking} />
+    <div className="center-flex h-screen w-screen">
+      <BookingInfoComponent place={place} booking={booking} payload={payload} />
     </div>
   );
 }

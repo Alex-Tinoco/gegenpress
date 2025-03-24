@@ -15,9 +15,11 @@ model bookings {
   place_id Int
   places   places   @relation(fields: [place_id], references: [id], map: "Bookings_place_id_fkey")
   users    users    @relation(fields: [user_id], references: [id], onDelete: Cascade, map: "Bookings_user_id_fkey")
+  bookings_participants bookings_participants[]  // Relation ajoutée
 
   @@index([place_id], map: "Bookings_place_id_fkey")
   @@index([user_id], map: "Bookings_user_id_fkey")
+  @@index([user_id, place_id], map: "Bookings_user_id_place_id_key")
 }
 
 model password {
@@ -50,4 +52,17 @@ model users {
   role                 String     @default("user")
   bookings             bookings[]
   password             password?
+  bookings_participants bookings_participants[]
+}
+
+model bookings_participants {
+  booking_id String
+  user_id    String
+  joined_at  DateTime @default(now())
+  bookings   bookings @relation(fields: [booking_id], references: [id], onDelete: Cascade)
+  users      users    @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@id([booking_id, user_id]) // Clé primaire composée
+  @@index([booking_id])
+  @@index([user_id])
 }

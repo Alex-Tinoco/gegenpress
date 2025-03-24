@@ -3,6 +3,7 @@ import {
   accessTokenVerification,
   refreshAccessToken,
 } from "@/lib/jwtfunctions";
+import path from "path";
 
 export async function middleware(req: NextRequest) {
   const pathname = req.nextUrl.pathname;
@@ -66,8 +67,11 @@ export async function middleware(req: NextRequest) {
     return NextResponse.next();
   }
 
+  if (/^\/book\/[^/]+$/.test(pathname)) {
+    return NextResponse.next();
+  }
+
   if (pathname === "/auth" && payload) {
-    // Redirect to home page if already logged in
     console.log("Already logged in, redirecting to home page.");
     return redirect("/", payload);
   }

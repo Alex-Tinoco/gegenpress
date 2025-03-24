@@ -83,3 +83,30 @@ export async function getPlaceById(id: number) {
     throw error;
   }
 }
+
+export async function getBookingParticipants(id: string) {
+  try {
+    return await prisma.bookings_participants.findMany({
+      where: {
+        booking_id: id,
+      },
+    });
+  } catch (error) {
+    console.error("Error fetching booking participants:", error);
+    throw error;
+  }
+}
+
+export async function joinBooking(id: string, user_id: string) {
+  try {
+    return await prisma.bookings_participants.create({
+      data: {
+        booking_id: id,
+        user_id: user_id,
+      },
+    });
+  } catch (error) {
+    console.error("Error joining booking:", error);
+    throw error;
+  }
+}

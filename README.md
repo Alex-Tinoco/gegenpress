@@ -1,36 +1,77 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Application de Réservation de Terrains Sportifs
 
-## Getting Started
+## Présentation
 
-First, run the development server:
+Cette application web permet aux utilisateurs de réserver des terrains sportifs et de participer à des matchs organisés par d'autres joueurs. Développée dans le cadre du BTS SIO option SLAM, elle offre une interface simple pour la gestion des réservations sportives.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+### Fonctionnalités principales
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- Inscription et connexion sécurisée
+- Recherche et réservation de terrains sportifs
+- Visualisation des réservations à venir
+- Invitation d'autres joueurs à rejoindre une réservation
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Installation et lancement
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Prérequis
 
-## Learn More
+- Node.js (v18 ou supérieur)
+- MySQL
 
-To learn more about Next.js, take a look at the following resources:
+### Étapes d'installation
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. Cloner le projet
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+   ```
+   git clone https://github.com/Alex-Tinoco/hinqo-games
+   cd hinqo-games
+   ```
 
-## Deploy on Vercel
+2. Installer les dépendances
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+   ```
+   npm install
+   ```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+3. Configurer la base de données et l'authentification
+
+   - Créer un fichier `.env` à la racine du projet
+   - Ajouter les lignes suivantes en remplaçant les valeurs par vos informations
+     ```
+     DATABASE_URL="mysql://username:password@localhost:3306/nom_de_la_base"
+     JWT_SECRET_KEY="votre_clé_secrète_très_longue_et_complexe"
+     ```
+
+4. Initialiser la base de données
+
+   ```
+   npx prisma migrate dev --name init
+   ```
+
+5. Lancer l'application
+
+   ```
+   npm run dev
+   ```
+
+6. Accéder à l'application
+   - Ouvrir un navigateur web
+   - Aller à l'adresse http://localhost:3000
+
+## Modèle Conceptuel de Données (MCD)
+
+![Modèle Conceptuel de Données](./public/images/mcd1.png)
+
+## Diagramme de Cas d'Utilisation
+
+![Diagramme de Cas d'Utilisation](./public/images/usecase1.png)
+
+## Technologies utilisées
+
+- Next.js
+- React
+- Prisma ORM
+- MySQL
+- Tailwind CSS
+- TypeScript
+- JSON Web Tokens (JWT) pour l'authentification
