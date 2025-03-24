@@ -1,5 +1,7 @@
 "use client";
+import Bookings from "@/components/bookings";
 import Profile from "@/components/profile";
+import Security from "@/components/security";
 import {
   CalendarDaysIcon,
   CalendarIcon,
@@ -9,35 +11,25 @@ import {
 } from "@heroicons/react/24/solid";
 import { Account, Payload } from "@models/authmodel";
 import { Booking, Place } from "@models/bookings";
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { DayPicker } from "react-day-picker";
 
 interface ProfileProps {
   payload: Payload;
   userInfo: Account;
   bookings: Booking[];
+  places: Place[];
 }
 
 export default function ProfileComponent({
   payload,
   userInfo,
   bookings,
+  places,
 }: ProfileProps) {
   const [selectedTab, setSelectedTab] = useState(0);
 
-  const maxPlayers = 10;
-  const today = new Date();
-  const twoMonthsAfter = new Date(today);
-  twoMonthsAfter.setMonth(today.getMonth() + 2);
-  const router = useRouter();
-
-  useEffect(() => {
-    console.log("Payload changed:", payload);
-  }, [payload]); // Runs only when `payload` updates
-
   return (
-    <div className="center-flex h-screen w-screen flex-col">
+    <div className="center-flex h-screen w-screen flex-col drop-shadow-2xl">
       <ul
         className={`menu lg:menu-horizontal bg-dark rounded-t-md p-0 text-white`}
       >
@@ -74,9 +66,9 @@ export default function ProfileComponent({
         {selectedTab == 0 ? (
           <Profile userId={payload.id} userInfo={userInfo} />
         ) : selectedTab == 1 ? (
-          <div>Bookings</div>
+          <Bookings userId={payload.id} bookings={bookings} places={places} />
         ) : selectedTab == 2 ? (
-          <div>?</div>
+          <Security userId={payload.id} userInfo={userInfo} />
         ) : null}
       </div>
     </div>

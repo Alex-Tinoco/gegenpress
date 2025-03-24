@@ -44,3 +44,42 @@ export async function getUserBookings(user_id: string) {
     throw error;
   }
 }
+
+export async function deleteBooking(id: string) {
+  try {
+    return await prisma.bookings.delete({
+      where: {
+        id,
+      },
+    });
+  } catch (error) {
+    console.error("Error deleting booking:", error);
+    throw error;
+  }
+}
+
+export async function getBookingById(id: string) {
+  try {
+    return await prisma.bookings.findUnique({
+      where: {
+        id,
+      },
+    });
+  } catch (error) {
+    console.error("Error fetching booking:", error);
+    throw error;
+  }
+}
+
+export async function getPlaceById(id: number) {
+  try {
+    return await prisma.places.findUnique({
+      where: {
+        id,
+      },
+    });
+  } catch (error) {
+    console.error("Error fetching place:", error);
+    throw error;
+  }
+}

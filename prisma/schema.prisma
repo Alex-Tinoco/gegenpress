@@ -8,7 +8,7 @@ datasource db {
 }
 
 model bookings {
-  id       String   @id
+  id       String   @id @default(uuid())
   date     DateTime
   players  Int
   user_id  String

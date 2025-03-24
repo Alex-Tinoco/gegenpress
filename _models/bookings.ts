@@ -7,6 +7,7 @@ export interface Place {
 }
 
 export interface Booking {
+  id?: string;
   date: Date;
   players: number;
   place_id: number;

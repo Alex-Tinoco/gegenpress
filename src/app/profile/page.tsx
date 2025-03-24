@@ -29,12 +29,15 @@ export default async function ProfilePage(req: Request) {
   }
 
   return (
-    <div>
-      <ProfileComponent
-        payload={payload}
-        userInfo={userInfo}
-        bookings={bookings}
-      />
+    <div className="flex h-screen w-screen bg-[url(/backgrounds/bgstadium2.jpg)] bg-cover">
+      <div className="h-full w-full bg-black/5 backdrop-blur-xs">
+        <ProfileComponent
+          payload={payload}
+          userInfo={userInfo}
+          bookings={bookings}
+          places={places}
+        />
+      </div>
     </div>
   );
 }
