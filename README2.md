@@ -1,4 +1,6 @@
-# Application de Réservation de Terrains Sportifs
+# Second contexte : Application de Coach
+
+[Voir le README du premier contexte](./README.md)
 
 ## Présentation
 

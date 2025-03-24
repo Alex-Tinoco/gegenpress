@@ -1,6 +1,6 @@
-# Application de Réservation de Terrains Sportifs
+# Premier contexte : Réservation de Terrains Sportifs
 
-##[Voir le README du second contexte](./README2.md)
+[Voir le README du second contexte](./README2.md)
 
 ## Présentation
 
