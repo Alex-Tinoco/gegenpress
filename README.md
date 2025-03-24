@@ -20,21 +20,21 @@ Plateforme dédiée aux entraîneurs sportifs leur permettant de réserver des t
 
 ### MCD du Projet 1
 
-![MCD Projet 1](./public/images/mcd1.png)
+![MCD Projet 1](./public/readme/mcd1.png)
 
 ### MCD du Projet 2
 
-![MCD Projet 2](./public/images/mcd1.png)
+![MCD Projet 2](./public/readme/mcd1.png)
 
 ## Diagrammes de Cas d'Utilisation
 
 ### Cas d'Utilisation du Projet 1
 
-![Use Case Projet 1](./public/images/usecase1.png)
+![Use Case Projet 1](./public/readme/usecase1.png)
 
 ### Cas d'Utilisation du Projet 2
 
-![Use Case Projet 2](./public/images/usecase1.png)
+![Use Case Projet 2](./public/readme/usecase1.png)
 
 ## Technologies utilisées
 
