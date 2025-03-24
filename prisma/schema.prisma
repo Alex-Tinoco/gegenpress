@@ -7,44 +7,47 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Users {
-  id                   String    @id @default(uuid())
-  name                 String?
-  email                String    @unique
-  password             Password?
-  wrong_login_attempts String?
-  gender               String?
-  birthdate            DateTime?
-  country              String?
-  city                String?
-  createdAt            DateTime  @default(now())
-  lastUpdated          DateTime  @updatedAt
-  role                 String    @default("user")
-  bookings             Bookings[]
+model bookings {
+  id       String   @id
+  date     DateTime
+  players  Int
+  user_id  String
+  place_id Int
+  places   places   @relation(fields: [place_id], references: [id], map: "Bookings_place_id_fkey")
+  users    users    @relation(fields: [user_id], references: [id], onDelete: Cascade, map: "Bookings_user_id_fkey")
+
+  @@index([place_id], map: "Bookings_place_id_fkey")
+  @@index([user_id], map: "Bookings_user_id_fkey")
 }
 
-model Password {
-  user      Users    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId    String   @id @unique
+model password {
+  userId    String   @id @unique(map: "Password_userId_key")
   hash      String
   createdAt DateTime @default(now())
+  users     users    @relation(fields: [userId], references: [id], onDelete: Cascade, map: "Password_userId_fkey")
 }
 
-model Places {
-  id         Int       @id @default(autoincrement())
+model places {
+  id         Int        @id @default(autoincrement())
   name       String
   location   String
   hours_open String
   image      String
-  bookings  Bookings[]
+  bookings   bookings[]
 }
 
-model Bookings {
-  id         String       @id @default(uuid())
-  date       DateTime
-  players    Int
-  user_id    String
-  user       Users        @relation(fields: [user_id], references: [id])
-  place_id Int
-  place Places @relation(fields: [place_id], references: [id])
+model users {
+  id                   String     @id @default(uuid())
+  name                 String?
+  email                String     @unique(map: "Users_email_key")
+  wrong_login_attempts String?
+  gender               String?
+  birthdate            DateTime?
+  country              String?
+  city                 String?
+  createdAt            DateTime   @default(now())
+  lastUpdated          DateTime   @default(now()) @updatedAt
+  role                 String     @default("user")
+  bookings             bookings[]
+  password             password?
 }

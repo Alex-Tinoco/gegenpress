@@ -1,22 +1,24 @@
 "use client";
 import { editUserData } from "@/lib/account";
-import { Account, Payload } from "@models/authmodel";
+import { Account } from "@models/authmodel";
+import { useRouter } from "next/navigation";
 import { useEffect, useState, useRef, FormEvent } from "react";
 
 interface ProfileProps {
-  payload: Payload;
+  userId: string;
   userInfo: Account;
 }
 
-const Profile: React.FC<ProfileProps> = ({ payload, userInfo }) => {
+const Profile: React.FC<ProfileProps> = ({ userId, userInfo }) => {
   const [editingProfile, setEditingProfile] = useState(false);
   const [isFormModified, setIsFormModified] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
+  const router = useRouter();
 
   // Form state to track changes
   const [formData, setFormData] = useState({
     name: userInfo.name || "",
-    email: payload.email || "",
+    email: userInfo.email || "",
     city: userInfo.city || "",
     country: userInfo.country || "",
     gender: userInfo.gender || "Non specified",
@@ -29,13 +31,13 @@ const Profile: React.FC<ProfileProps> = ({ payload, userInfo }) => {
     // Reset form data when userInfo changes
     setFormData({
       name: userInfo.name || "",
-      email: payload.email || "",
+      email: userInfo.email || "",
       city: userInfo.city || "",
       country: userInfo.country || "",
       gender: userInfo.gender || "Non specified",
       birthdate: userInfo.birthdate || undefined,
     });
-  }, [userInfo, payload]);
+  }, [userInfo]);
 
   // Set up the beforeunload event handler when in editing mode with modifications
   useEffect(() => {
@@ -86,7 +88,7 @@ const Profile: React.FC<ProfileProps> = ({ payload, userInfo }) => {
         },
         body: JSON.stringify({
           action: "editAccount",
-          data: { ...formData, id: payload.id },
+          data: { ...formData, id: userId },
         }),
       });
 
@@ -119,7 +121,7 @@ const Profile: React.FC<ProfileProps> = ({ payload, userInfo }) => {
         // Reset form data to original values
         setFormData({
           name: userInfo.name || "",
-          email: payload.email || "",
+          email: userInfo.email || "",
           city: userInfo.city || "",
           country: userInfo.country || "",
           gender: userInfo.gender || "Non specified",
@@ -133,14 +135,35 @@ const Profile: React.FC<ProfileProps> = ({ payload, userInfo }) => {
     }
   };
 
-  const handleDeleteAccount = () => {
+  const handleDeleteAccount = async () => {
     const confirmed = window.confirm(
       "Are you sure you want to delete your account? This action cannot be undone.",
     );
     if (confirmed) {
-      // Call delete account function
-      // await deleteAccount(payload.id);
-      console.log("Deleting account", payload.id);
+      try {
+        const response = await fetch("/api/account", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            action: "deleteAccount",
+            data: { id: userId },
+          }),
+        });
+
+        if (response.status == 200) {
+          console.log("User deleted successfully");
+          setIsFormModified(false);
+          setEditingProfile(false);
+          router.push("/");
+        } else {
+          console.error("Error deleting profile:", response.statusText);
+        }
+      } catch (error) {
+        console.error("Error deleting profile:", error);
+      }
+      console.log("Deleting account", userId);
     }
   };
 
@@ -159,7 +182,7 @@ const Profile: React.FC<ProfileProps> = ({ payload, userInfo }) => {
             }
             disabled
           ></input>
-          <p className="text-light">{payload.email}</p>
+          <p className="text-light">{userInfo.email}</p>
           <div className="divider bg-light/20 my-2 h-0.5 w-2/3 self-center" />
           <label className="input rounded-md border-1 border-gray-500/70 pl-3">
             <span className="label">City</span>
@@ -239,7 +262,7 @@ const Profile: React.FC<ProfileProps> = ({ payload, userInfo }) => {
             onChange={handleInputChange}
           ></input>
           <p className="text-light">
-            {payload.email ? payload.email : "No Email"}
+            {userInfo.email ? userInfo.email : "No Email"}
           </p>
           <div className="divider bg-light/20 my-2 h-0.5 w-2/3 self-center" />
           <label className="input rounded-md border-1 border-gray-500/70 pl-3">

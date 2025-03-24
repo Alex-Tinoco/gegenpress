@@ -15,14 +15,14 @@ import { DayPicker } from "react-day-picker";
 
 interface ProfileProps {
   payload: Payload;
-  places: Place[];
   userInfo: Account;
+  bookings: Booking[];
 }
 
 export default function ProfileComponent({
   payload,
-  places,
   userInfo,
+  bookings,
 }: ProfileProps) {
   const [selectedTab, setSelectedTab] = useState(0);
 
@@ -72,7 +72,7 @@ export default function ProfileComponent({
       </ul>
       <div className="bg-dark flex w-1/2 justify-center rounded-md p-5 text-white">
         {selectedTab == 0 ? (
-          <Profile payload={payload} userInfo={userInfo} />
+          <Profile userId={payload.id} userInfo={userInfo} />
         ) : selectedTab == 1 ? (
           <div>Bookings</div>
         ) : selectedTab == 2 ? (

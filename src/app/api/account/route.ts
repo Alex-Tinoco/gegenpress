@@ -1,11 +1,16 @@
 import {
   createAccount,
+  deleteAccount,
   editUserData,
   findUserByEmail,
   findUserById,
   retrievePassword,
 } from "@/lib/account";
-import { signAccessToken, signRefreshToken } from "@/lib/jwtfunctions";
+import {
+  deleteAuthCookies,
+  signAccessToken,
+  signRefreshToken,
+} from "@/lib/jwtfunctions";
 import { Account, Payload } from "@models/authmodel";
 import { NextRequest, NextResponse } from "next/server";
 const bcrypt = require("bcryptjs");
@@ -27,6 +32,9 @@ export async function POST(req: NextRequest) {
       case "editAccount":
         let { id, ...userData } = data;
         return await HandleEditingAccount(id, userData);
+
+      case "deleteAccount":
+        return await handleDeleteAccount(data.id);
 
       default:
         return new NextResponse(null, { status: 405 });
@@ -198,6 +206,43 @@ async function HandleEditingAccount(id: string, data: Account) {
     }
   } catch (error) {
     console.error("Error editing account:", error);
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 },
+    );
+  }
+}
+
+async function handleDeleteAccount(id: string) {
+  try {
+    console.log("Executing deleteAccount");
+
+    const user = await findUserById(id);
+    console.log(user);
+    if (!user) {
+      return NextResponse.json(
+        { error: "Conflict: User does not exist" },
+        { status: 409 },
+      );
+    } else {
+      try {
+        await deleteAccount(id);
+        let res = NextResponse.json(
+          { message: "Account deleted" },
+          { status: 200 },
+        );
+        await deleteAuthCookies(res);
+        return res;
+      } catch (error) {
+        console.error("Prisma Error deleting account:", error);
+        return NextResponse.json(
+          { error: "Internal Server Error" },
+          { status: 500 },
+        );
+      }
+    }
+  } catch (error) {
+    console.error("Error deleting account:", error);
     return NextResponse.json(
       { error: "Internal Server Error" },
       { status: 500 },

@@ -59,8 +59,16 @@ export async function retrievePassword(id: string) {
 export async function editUserData(id: string, data: Account) {
   return await prisma.users.update({
     where: {
-      id: id,
+      id,
     },
-    data: data,
+    data,
+  });
+}
+
+export async function deleteAccount(id: string) {
+  return await prisma.users.delete({
+    where: {
+      id,
+    },
   });
 }

@@ -2,7 +2,7 @@
 "use server";
 import { cookies } from "next/headers"; // Import cookies from next/headers
 import ProfileComponent from "./profile"; // Client-side component (book)
-import { getAllPlaces } from "@/lib/bookdb";
+import { getAllPlaces, getUserBookings } from "@/lib/bookdb";
 import { Place } from "@models/bookings";
 import { Payload } from "@models/authmodel";
 import { NextResponse } from "next/server";
@@ -16,9 +16,10 @@ export default async function ProfilePage(req: Request) {
   if (!cookieValue) {
     return NextResponse.redirect(new URL("/auth", req.url));
   }
-  const parsedPayload: Payload = JSON.parse(cookieValue);
+  const payload: Payload = JSON.parse(cookieValue);
 
-  const userInfo = await findUserByEmail(parsedPayload.email);
+  const userInfo = await findUserByEmail(payload.email);
+  const bookings = await getUserBookings(payload.id);
 
   let places: Place[] = [];
   try {
@@ -30,9 +31,9 @@ export default async function ProfilePage(req: Request) {
   return (
     <div>
       <ProfileComponent
-        payload={parsedPayload}
-        places={places}
+        payload={payload}
         userInfo={userInfo}
+        bookings={bookings}
       />
     </div>
   );
