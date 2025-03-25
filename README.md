@@ -1,70 +1,40 @@
-# Application de Réservation de Terrains Sportifs
+# Projets BTS SIO SLAM - Épreuve E5
 
-## Présentation
+Ce dépôt contient les deux projets développés dans le cadre de l'épreuve E6 du BTS SIO option SLAM.
 
-Cette application web permet aux utilisateurs de réserver des terrains sportifs et de participer à des matchs organisés par d'autres joueurs. Développée dans le cadre du BTS SIO option SLAM, elle offre une interface simple pour la gestion des réservations sportives.
+## Présentation des Projets
 
-### Fonctionnalités principales
+### Projet 1 : Application de Réservation de Terrains Sportifs
 
-- Inscription et connexion sécurisée
-- Recherche et réservation de terrains sportifs
-- Visualisation des réservations à venir
-- Invitation d'autres joueurs à rejoindre une réservation
+Application web permettant aux utilisateurs de réserver des terrains sportifs et de participer à des matchs. Les utilisateurs peuvent s'inscrire, consulter les terrains disponibles, effectuer des réservations et inviter d'autres joueurs à leurs matchs.
 
-## Installation et lancement
+[Documentation détaillée du Projet 1](./README1.md)
 
-### Prérequis
+### Projet 2 : Application pour Entraîneurs
 
-- Node.js (v18 ou supérieur)
-- MySQL
+Plateforme dédiée aux entraîneurs leur permettant de réserver des terrains pour leurs séances de coaching. Les entraîneurs peuvent gérer leur profil professionnel, créer des sessions d'entraînement récurrentes et suivre leurs participants.
 
-### Étapes d'installation
+[Documentation détaillée du Projet 2](./README2.md)
 
-1. Cloner le projet
+## Modèles Conceptuels de Données (MCD)
 
-   ```
-   git clone https://github.com/Alex-Tinoco/hinqo-games
-   cd hinqo-games
-   ```
+### MCD du Projet 1
 
-2. Installer les dépendances
+![MCD Projet 1](./public/readme/mcd1.png)
 
-   ```
-   npm install
-   ```
+### MCD du Projet 2
 
-3. Configurer la base de données et l'authentification
+![MCD Projet 2](./public/readme/mcd2.png)
 
-   - Créer un fichier `.env` à la racine du projet
-   - Ajouter les lignes suivantes en remplaçant les valeurs par vos informations
-     ```
-     DATABASE_URL="mysql://username:password@localhost:3306/nom_de_la_base"
-     JWT_SECRET_KEY="votre_clé_secrète_très_longue_et_complexe"
-     ```
+## Diagrammes de Cas d'Utilisation
 
-4. Initialiser la base de données
+### Cas d'Utilisation du Projet 1
 
-   ```
-   npx prisma migrate dev --name init
-   ```
+![Use Case Projet 1](./public/readme/usecase1.png)
 
-5. Lancer l'application
+### Cas d'Utilisation du Projet 2
 
-   ```
-   npm run dev
-   ```
-
-6. Accéder à l'application
-   - Ouvrir un navigateur web
-   - Aller à l'adresse http://localhost:3000
-
-## Modèle Conceptuel de Données (MCD)
-
-![Modèle Conceptuel de Données](./public/images/mcd1.png)
-
-## Diagramme de Cas d'Utilisation
-
-![Diagramme de Cas d'Utilisation](./public/images/usecase1.png)
+![Use Case Projet 2](./public/readme/usecase2.png)
 
 ## Technologies utilisées
 
@@ -74,4 +44,9 @@ Cette application web permet aux utilisateurs de réserver des terrains sportifs
 - MySQL
 - Tailwind CSS
 - TypeScript
-- JSON Web Tokens (JWT) pour l'authentification
+- JWT pour l'authentification
+
+## Réalisé par
+
+Da Cunha Tinoco Alex
+BTS SIO option SLAM - Session 2024/25
