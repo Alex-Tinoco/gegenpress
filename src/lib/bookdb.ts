@@ -1,6 +1,7 @@
 "use server";
 
 import { Booking } from "@models/bookings";
+import { Reservation } from "@models/reservation";
 
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
@@ -107,6 +108,94 @@ export async function joinBooking(id: string, user_id: string) {
     });
   } catch (error) {
     console.error("Error joining booking:", error);
+    throw error;
+  }
+}
+
+//////////////////// RESERVATION
+
+export async function sessionReservation(reservation: Reservation) {
+  try {
+    console.log("Creating reservation:", reservation);
+
+    return await prisma.coaching_sessions.create({
+      data: {
+        date: reservation.date,
+        duration: reservation.duration,
+        description: reservation.description,
+        max_players: reservation.players,
+        place_id: reservation.place_id,
+        user_id: reservation.user_id,
+      },
+    });
+  } catch (error) {
+    console.error("Error creating reservation:", error);
+    throw error;
+  }
+}
+
+export async function getReservationById(id: string) {
+  try {
+    return await prisma.coaching_sessions.findUnique({
+      where: {
+        id,
+      },
+    });
+  } catch (error) {
+    console.error("Error fetching reservation:", error);
+    throw error;
+  }
+}
+
+export async function getUsersReservations(user_id: string) {
+  try {
+    return await prisma.coaching_sessions.findMany({
+      where: {
+        user_id: user_id,
+      },
+    });
+  } catch (error) {
+    console.error("Error fetching reservations:", error);
+    throw error;
+  }
+}
+
+export async function deleteReservation(id: string) {
+  try {
+    return await prisma.coaching_sessions.delete({
+      where: {
+        id,
+      },
+    });
+  } catch (error) {
+    console.error("Error deleting reservation:", error);
+    throw error;
+  }
+}
+
+export async function joinReservation(id: string, user_id: string) {
+  try {
+    return await prisma.session_participants.create({
+      data: {
+        session_id: id,
+        user_id: user_id,
+      },
+    });
+  } catch (error) {
+    console.error("Error joining reservation:", error);
+    throw error;
+  }
+}
+
+export async function getReservationParticipants(id: string) {
+  try {
+    return await prisma.session_participants.findMany({
+      where: {
+        reservation_id: id,
+      },
+    });
+  } catch (error) {
+    console.error("Error fetching reservation participants:", error);
     throw error;
   }
 }

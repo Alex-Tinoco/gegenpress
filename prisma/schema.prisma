@@ -36,6 +36,7 @@ model places {
   hours_open String
   image      String
   bookings   bookings[]
+  coaching_sessions coaching_sessions[]
 }
 
 model users {
@@ -53,6 +54,8 @@ model users {
   bookings             bookings[]
   password             password?
   bookings_participants bookings_participants[]
+  coaching_sessions    coaching_sessions[]
+  session_participants session_participants[]
 }
 
 model bookings_participants {
@@ -64,5 +67,33 @@ model bookings_participants {
 
   @@id([booking_id, user_id]) // Clé primaire composée
   @@index([booking_id])
+  @@index([user_id])
+}
+
+model coaching_sessions {
+  id         String        @id @default(uuid())
+  date       DateTime
+  duration   Int
+  max_players Int
+  description String
+  place_id   Int
+  places     places     @relation(fields: [place_id], references: [id], map: "Coaching_sessions_place_id_fkey")
+  user_id    String
+  users      users      @relation(fields: [user_id], references: [id], onDelete: Cascade, map: "Coaching_sessions_user_id_fkey")
+  session_participants session_participants[]
+
+  @@index([place_id], map: "Coaching_sessions_place_id_fkey")
+  @@index([user_id], map: "Coaching_sessions_user_id_fkey")
+}
+
+model session_participants {
+  session_id String
+  user_id    String
+  joined_at  DateTime @default(now())
+  coaching_sessions coaching_sessions @relation(fields: [session_id], references: [id], onDelete: Cascade)
+  users      users    @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@id([session_id, user_id]) // Clé primaire composée
+  @@index([session_id])
   @@index([user_id])
 }
