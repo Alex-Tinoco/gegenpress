@@ -24,7 +24,7 @@ Plateforme dédiée aux entraîneurs leur permettant de réserver des terrains p
 
 ### MCD du Projet 2
 
-![MCD Projet 2](./public/readme/mcd2.png)
+![MCD Projet 2](./public/readme/mcd2.jpg)
 
 ## Diagrammes de Cas d'Utilisation
 

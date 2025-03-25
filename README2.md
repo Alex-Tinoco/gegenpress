@@ -63,7 +63,7 @@ Cette application web permet aux entraîneurs sportifs de créer et gérer des s
 
 ## Modèle Conceptuel de Données (MCD)
 
-![Modèle Conceptuel de Données](./public/readme/mcd2.png)
+![Modèle Conceptuel de Données](./public/readme/mcd2.jpg)
 
 ## Diagramme de Cas d'Utilisation
 
