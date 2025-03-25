@@ -1,6 +1,6 @@
 # Projets BTS SIO SLAM - Épreuve E5
 
-Ce dépôt contient les deux projets développés dans le cadre de l'épreuve E5 du BTS SIO option SLAM.
+Ce dépôt contient les deux projets développés dans le cadre de l'épreuve E6 du BTS SIO option SLAM.
 
 ## Présentation des Projets
 
@@ -10,9 +10,9 @@ Application web permettant aux utilisateurs de réserver des terrains sportifs e
 
 [Documentation détaillée du Projet 1](./README1.md)
 
-### Projet 2 : Application pour Entraîneurs Sportifs
+### Projet 2 : Application pour Entraîneurs
 
-Plateforme dédiée aux entraîneurs sportifs leur permettant de réserver des terrains pour leurs séances de coaching. Les entraîneurs peuvent gérer leur profil professionnel, créer des sessions d'entraînement récurrentes et suivre leurs participants.
+Plateforme dédiée aux entraîneurs leur permettant de réserver des terrains pour leurs séances de coaching. Les entraîneurs peuvent gérer leur profil professionnel, créer des sessions d'entraînement récurrentes et suivre leurs participants.
 
 [Documentation détaillée du Projet 2](./README2.md)
 
@@ -24,7 +24,7 @@ Plateforme dédiée aux entraîneurs sportifs leur permettant de réserver des t
 
 ### MCD du Projet 2
 
-![MCD Projet 2](./public/readme/mcd1.png)
+![MCD Projet 2](./public/readme/mcd2.png)
 
 ## Diagrammes de Cas d'Utilisation
 
@@ -34,7 +34,7 @@ Plateforme dédiée aux entraîneurs sportifs leur permettant de réserver des t
 
 ### Cas d'Utilisation du Projet 2
 
-![Use Case Projet 2](./public/readme/usecase1.png)
+![Use Case Projet 2](./public/readme/usecase2.png)
 
 ## Technologies utilisées
 

@@ -20,7 +20,7 @@ export default async function BookingInfoPage({
 
   let booking: Booking | undefined = undefined;
   try {
-    const { id } = await params;
+    const { id } = params;
     booking = await getBookingById(id);
   } catch (error) {
     console.error("Error fetching booking:", error);
