@@ -1,36 +1,18 @@
-<<<<<<< HEAD
-
-# Second contexte : Application de Coach
-
-=======
-
 # Second contexte : Application pour Entraîneurs
-
-> > > > > > > readme-changes
 
 [Voir le README du premier contexte](./README1.md)
 
 ## Présentation
 
-<<<<<<< HEAD
-Cette application web permet aux utilisateurs de réserver des terrains sportifs et de participer à des matchs organisés par d'autres joueurs. Développée dans le cadre du BTS SIO option SLAM, elle offre une interface simple pour la gestion des réservations sportives.
-=======
 Cette application web permet aux entraîneurs sportifs de créer et gérer des sessions d'entraînement sur différents terrains. Elle s'adresse aux coachs professionnels qui souhaitent organiser facilement leurs séances et suivre leurs participants. Développée dans le cadre du BTS SIO option SLAM, elle partage la même base d'utilisateurs que l'application de réservation de terrains sportifs.
-
-> > > > > > > readme-changes
 
 ### Fonctionnalités principales
 
 - Inscription et connexion sécurisée
-  <<<<<<< HEAD
-- Recherche et réservation de terrains sportifs
-- Visualisation des réservations à venir
-- # Invitation d'autres joueurs à rejoindre une réservation
 - Recherche et réservation de sessions d'entraînement
 - Visualisation des sessions à venir
 - Invitation de joueurs à rejoindre une session
 - Description détaillée des séances proposées
-  > > > > > > > readme-changes
 
 ## Installation et lancement
 
