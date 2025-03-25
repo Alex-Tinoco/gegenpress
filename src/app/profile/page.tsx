@@ -2,7 +2,11 @@
 "use server";
 import { cookies } from "next/headers"; // Import cookies from next/headers
 import ProfileComponent from "./profile"; // Client-side component (book)
-import { getAllPlaces, getUserBookings } from "@/lib/bookdb";
+import {
+  getAllPlaces,
+  getUserBookings,
+  getUsersReservations,
+} from "@/lib/bookdb";
 import { Place } from "@models/bookings";
 import { Payload } from "@models/authmodel";
 import { NextResponse } from "next/server";
@@ -20,6 +24,7 @@ export default async function ProfilePage(req: Request) {
 
   const userInfo = await findUserByEmail(payload.email);
   const bookings = await getUserBookings(payload.id);
+  const reservations = await getUsersReservations(payload.id);
 
   let places: Place[] = [];
   try {
@@ -35,6 +40,7 @@ export default async function ProfilePage(req: Request) {
           payload={payload}
           userInfo={userInfo}
           bookings={bookings}
+          reservations={reservations}
           places={places}
         />
       </div>

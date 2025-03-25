@@ -1,5 +1,6 @@
 "use client";
 import Bookings from "@/components/bookings";
+import Coaching from "@/components/coaching";
 import Profile from "@/components/profile";
 import Security from "@/components/security";
 import {
@@ -7,16 +8,19 @@ import {
   CalendarIcon,
   ShieldCheckIcon,
   UserCircleIcon,
+  UserGroupIcon,
   UserIcon,
 } from "@heroicons/react/24/solid";
 import { Account, Payload } from "@models/authmodel";
 import { Booking, Place } from "@models/bookings";
+import { Reservation } from "@models/reservation";
 import { useEffect, useState } from "react";
 
 interface ProfileProps {
   payload: Payload;
   userInfo: Account;
   bookings: Booking[];
+  reservations: Reservation[];
   places: Place[];
 }
 
@@ -25,6 +29,7 @@ export default function ProfileComponent({
   userInfo,
   bookings,
   places,
+  reservations,
 }: ProfileProps) {
   const [selectedTab, setSelectedTab] = useState(0);
 
@@ -57,6 +62,16 @@ export default function ProfileComponent({
         >
           {" "}
           <a>
+            <UserGroupIcon className="h-6 w-6" />
+            <span className="text-lg">Coaching</span>
+          </a>
+        </li>
+        <li
+          className={`${selectedTab === 3 && "bg-main"} rounded-tr-md`}
+          onClick={() => setSelectedTab(3)}
+        >
+          {" "}
+          <a>
             <ShieldCheckIcon className="h-6 w-6" />
             <span className="text-lg">Security</span>
           </a>
@@ -68,6 +83,12 @@ export default function ProfileComponent({
         ) : selectedTab == 1 ? (
           <Bookings userId={payload.id} bookings={bookings} places={places} />
         ) : selectedTab == 2 ? (
+          <Coaching
+            userId={payload.id}
+            reservations={reservations}
+            places={places}
+          />
+        ) : selectedTab == 3 ? (
           <Security userId={payload.id} userInfo={userInfo} />
         ) : null}
       </div>

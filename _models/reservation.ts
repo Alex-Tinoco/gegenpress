@@ -3,7 +3,7 @@ export interface Reservation {
   date: Date;
   duration: number;
   description: string;
-  players: number;
+  max_players: number;
   place_id: number;
   user_id: string;
 }

@@ -52,7 +52,7 @@ export default function ReserveComponent({ payload, places }: ReserveProps) {
     }
     const reservationdata: Reservation = {
       date: selectedDate,
-      players: playersCounter,
+      max_players: playersCounter,
       place_id: selectedPlace.id,
       user_id: payload.id,
       duration: durationOptions[duration],
