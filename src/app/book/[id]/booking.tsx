@@ -2,6 +2,7 @@
 import { joinBooking } from "@/lib/bookdb";
 import { Payload } from "@models/authmodel";
 import { Booking, Place } from "@models/bookings";
+import { toast } from "react-toastify";
 
 interface BookingInfoProps {
   booking: Booking;
@@ -23,7 +24,14 @@ export default function BookingInfoComponent({
     }
   };
 
-  // Format date nicely
+  const handleCopy = async (text: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch (err) {
+      console.error("Failed to copy text: ", err);
+    }
+  };
+
   const formattedDate = booking?.date
     ? new Date(booking.date).toLocaleDateString("en-US", {
         weekday: "long",
@@ -123,29 +131,30 @@ export default function BookingInfoComponent({
             </div>
           </div>
 
-          {/* Join button or login message */}
           {payload ? (
-            <button
-              className="bg-main hover:bg-main-darker flex w-full items-center justify-center space-x-2 rounded-lg py-4 font-medium text-white shadow-md transition duration-300 hover:shadow-lg"
-              onClick={() => {
-                if (booking && booking.id) {
-                  handleJoinBooking(booking.id, payload.id);
-                } else {
-                  console.error("Booking ID is undefined");
-                }
-              }}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5"
-                viewBox="0 0 20 20"
-                fill="currentColor"
+            payload.id != booking.user_id ? (
+              <button
+                className="bg-main hover:bg-main-darker flex w-full items-center justify-center space-x-2 rounded-lg py-4 font-medium text-white shadow-md transition duration-300 hover:shadow-lg"
+                onClick={() => {
+                  if (booking && booking.id) {
+                    handleJoinBooking(booking.id, payload.id);
+                  } else {
+                    console.error("Booking ID is undefined");
+                  }
+                }}
               >
-                <path d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6z" />
-                <path d="M16 7a1 1 0 10-2 0v1h-1a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1V7z" />
-              </svg>
-              <span>Join Booking</span>
-            </button>
+                <span>Join Booking</span>
+              </button>
+            ) : (
+              <button
+                className="bg-main hover:bg-main-darker flex w-full cursor-pointer items-center justify-center space-x-2 rounded-lg py-4 font-medium text-white shadow-md transition duration-300 hover:shadow-lg"
+                onClick={() =>
+                  handleCopy(`${window.location.origin}/book/${booking.id}`)
+                }
+              >
+                Share Booking
+              </button>
+            )
           ) : (
             <div className="w-full rounded-lg bg-gray-100 py-4 text-center font-medium text-gray-700">
               You need to be logged in to join this booking

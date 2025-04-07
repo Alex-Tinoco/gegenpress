@@ -1,5 +1,10 @@
 import { deleteBooking } from "@/lib/bookdb";
-import { ClipboardDocumentIcon, TrashIcon } from "@heroicons/react/24/solid";
+import {
+  ClipboardDocumentIcon,
+  EyeDropperIcon,
+  EyeIcon,
+  TrashIcon,
+} from "@heroicons/react/24/solid";
 import { Booking, Place } from "@models/bookings";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -31,22 +36,6 @@ const Bookings: React.FC<BookingProps> = ({ userId, bookings, places }) => {
       } catch (error) {
         console.error("Error deleting booking:", error);
       }
-    }
-  };
-
-  const [copied, setCopied] = useState(false);
-
-  const handleCopy = async (text: string) => {
-    try {
-      await navigator.clipboard.writeText(text);
-      setCopied(true);
-
-      // Reset the copied state after 2 seconds
-      setTimeout(() => {
-        setCopied(false);
-      }, 2000);
-    } catch (err) {
-      console.error("Failed to copy text: ", err);
     }
   };
 
@@ -93,16 +82,13 @@ const Bookings: React.FC<BookingProps> = ({ userId, bookings, places }) => {
                     Delete
                   </span>
                 </button>
-                <button
-                  className="btn-primary bg-light text-md hover:bg-white"
-                  onClick={() =>
-                    handleCopy(`${window.location.origin}/book/${booking.id}`)
-                  }
-                >
-                  <span className="text-main flex items-center justify-center gap-2">
-                    <ClipboardDocumentIcon className="h-5 w-5" /> Share
-                  </span>
-                </button>
+                <Link href={`${window.location.origin}/book/${booking.id}`}>
+                  <button className="btn-primary bg-light text-md hover:bg-white">
+                    <span className="text-main flex items-center justify-center gap-2">
+                      <EyeIcon className="h-5 w-5" /> Open
+                    </span>
+                  </button>
+                </Link>
               </td>
             </tr>
           ))}

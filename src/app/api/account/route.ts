@@ -167,6 +167,10 @@ async function handleLogOut() {
       maxAge: 0,
       path: "/",
     });
+    response.cookies.set("payload", "", {
+      maxAge: 0,
+      path: "/",
+    });
 
     console.log("Logged out");
     return response;

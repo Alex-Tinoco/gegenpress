@@ -1,22 +1,10 @@
 "use client";
 
+import { UserCircleIcon } from "@heroicons/react/24/solid";
 import Link from "next/link";
 
 export default function Home() {
-  const LogOut = async () => {
-    const response = await fetch("/api/account", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        action: "logOut",
-      }),
-    });
-    if (response.ok) {
-      window.location.href = "/auth";
-    }
-  };
+
 
   return (
     <div className="flex flex-col lg:flex-row">
@@ -24,6 +12,15 @@ export default function Home() {
         <span className="text-main font-galada inline">Gegen</span>
         <span className="font-galada text-secondary">Press</span>
       </div>
+
+      <div className="absolute top-6 right-6">
+  <Link href={"/profile"}>
+    <UserCircleIcon
+      className="text-white hover:text-gray-300 transition-colors duration-300 cursor-pointer"
+      height={60}
+    />
+  </Link>
+</div>
 
       <div className="center-flex h-1/2 w-full border-1 border-black bg-[url(/backgrounds/homebg-player.jpg)] bg-cover shadow-2xl lg:h-screen lg:w-1/2">
         <div className="center-flex h-full w-full flex-col gap-10 bg-gradient-to-l from-black via-black/70 via-30% to-black/30 transition-colors duration-300 hover:via-black/10">

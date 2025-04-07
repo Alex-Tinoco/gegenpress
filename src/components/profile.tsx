@@ -15,7 +15,6 @@ const Profile: React.FC<ProfileProps> = ({ userId, userInfo }) => {
   const formRef = useRef<HTMLFormElement>(null);
   const router = useRouter();
 
-  // Form state to track changes
   const [formData, setFormData] = useState({
     name: userInfo.name || "",
     email: userInfo.email || "",
@@ -28,7 +27,6 @@ const Profile: React.FC<ProfileProps> = ({ userId, userInfo }) => {
   useEffect(() => {
     console.log("User info changed:", userInfo);
 
-    // Reset form data when userInfo changes
     setFormData({
       name: userInfo.name || "",
       email: userInfo.email || "",
@@ -39,7 +37,6 @@ const Profile: React.FC<ProfileProps> = ({ userId, userInfo }) => {
     });
   }, [userInfo]);
 
-  // Set up the beforeunload event handler when in editing mode with modifications
   useEffect(() => {
     const handleBeforeUnload = (event: BeforeUnloadEvent) => {
       if (editingProfile && isFormModified) {
@@ -61,7 +58,6 @@ const Profile: React.FC<ProfileProps> = ({ userId, userInfo }) => {
   ) => {
     const { name, value } = e.target;
 
-    // Special handling for birthdate
     if (name === "birthdate") {
       setFormData((prev) => ({
         ...prev,
@@ -94,18 +90,14 @@ const Profile: React.FC<ProfileProps> = ({ userId, userInfo }) => {
 
       if (response.ok) {
         console.log("Profile updated successfully");
-
-        // Set flags to prevent the "unsaved changes" warning
         setIsFormModified(false);
         setEditingProfile(false);
 
-        // Use a small timeout to ensure React state updates before reload
         setTimeout(() => {
           window.location.reload();
         }, 100);
       } else {
         console.error("Error updating profile:", response.statusText);
-        // Handle specific error cases here if needed
       }
     } catch (error) {
       console.error("Error updating profile:", error);
@@ -118,7 +110,6 @@ const Profile: React.FC<ProfileProps> = ({ userId, userInfo }) => {
         "You have unsaved changes. Are you sure you want to cancel?",
       );
       if (confirmed) {
-        // Reset form data to original values
         setFormData({
           name: userInfo.name || "",
           email: userInfo.email || "",
@@ -132,6 +123,21 @@ const Profile: React.FC<ProfileProps> = ({ userId, userInfo }) => {
       }
     } else {
       setEditingProfile(false);
+    }
+  };
+
+  const LogOut = async () => {
+    const response = await fetch("/api/account", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        action: "logOut",
+      }),
+    });
+    if (response.ok) {
+      window.location.href = "/auth";
     }
   };
 
@@ -343,7 +349,11 @@ const Profile: React.FC<ProfileProps> = ({ userId, userInfo }) => {
             Delete account
           </button>
         </form>
+        
       )}
+      <button className="text-black btn-primary bg-gray-600 hover:bg-gray-700 w-full" onClick={() => LogOut()}>
+        Log out
+      </button>
     </div>
   );
 };

@@ -19,8 +19,6 @@ export async function middleware(req: NextRequest) {
       if (payload) {
         console.log("Access token verified");
       } else {
-        console.log("Access token verification failed");
-
         // Try refresh token if access token failed
         if (refreshToken) {
           payload = await refreshAccessToken(response, refreshToken);
