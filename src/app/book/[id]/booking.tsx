@@ -182,9 +182,10 @@ export default function BookingInfoComponent({
             </div>
           </div>
         </div>
-        <Link href={"/"}>
-          <button className="btn-primary bg-main w-1/4">Go to home page</button>
-        </Link>
+
+        <button className="btn-primary bg-main w-1/4">
+          <Link href={"/"}>Go to home page </Link>
+        </button>
       </div>
     </div>
   );
