@@ -1,29 +1,37 @@
 // app/book/page.tsx
 "use server";
-import { getBookingById, getPlaceById } from "@/lib/bookdb";
+import {
+  getBookingById,
+  getBookingParticipants,
+  getPlaceById,
+} from "@/lib/bookdb";
 import { Booking, Place } from "@models/bookings";
 import BookingInfoComponent from "./booking";
 import { cookies } from "next/headers";
 import { Payload } from "@models/authmodel";
+import { redirect } from "next/navigation";
 // This is the server-side handler, no useState here
 export default async function BookingInfoPage({
   params,
 }: {
   params: { id: string };
 }) {
+  let booking: Booking | undefined = undefined;
+  try {
+    booking = await getBookingById(params.id);
+    if (!booking) {
+      redirect("/");
+    }
+  } catch (error) {
+    console.error("Error fetching booking:", error);
+    redirect("/");
+  }
+
   let payload: Payload | undefined = undefined;
   const cookieStore = await cookies();
   const cookieValue = cookieStore.get("payload")?.value;
   if (cookieValue) {
     payload = JSON.parse(cookieValue);
-  }
-
-  let booking: Booking | undefined = undefined;
-  try {
-    const { id } = params;
-    booking = await getBookingById(id);
-  } catch (error) {
-    console.error("Error fetching booking:", error);
   }
 
   if (!booking) {
@@ -37,9 +45,19 @@ export default async function BookingInfoPage({
     console.error("Error fetching place:", error);
   }
 
+  let booking_participants: number | undefined = undefined;
+  if (booking.id) {
+    booking_participants = (await getBookingParticipants(booking.id)).length;
+  }
+
   return (
     <div className="center-flex h-screen w-screen">
-      <BookingInfoComponent place={place} booking={booking} payload={payload} />
+      <BookingInfoComponent
+        place={place}
+        booking={booking}
+        payload={payload}
+        booking_participants={booking_participants}
+      />
     </div>
   );
 }

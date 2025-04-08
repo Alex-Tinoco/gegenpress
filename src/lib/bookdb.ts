@@ -85,7 +85,7 @@ export async function getPlaceById(id: number) {
   }
 }
 
-export async function getBookingParticipants(id: string) {
+export async function getBookingParticipants(id: string): Promise<any[]> {
   try {
     return await prisma.bookings_participants.findMany({
       where: {
@@ -123,7 +123,7 @@ export async function sessionReservation(reservation: Reservation) {
         date: reservation.date,
         duration: reservation.duration,
         description: reservation.description,
-        max_players: reservation.players,
+        max_players: reservation.max_players,
         place_id: reservation.place_id,
         user_id: reservation.user_id,
       },

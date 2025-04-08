@@ -1,6 +1,6 @@
 "use client";
 import { SelectPlace } from "@/components/SelectPlace";
-import { CreateBooking } from "@/lib/bookdb";
+import { CreateBooking, joinBooking } from "@/lib/bookdb";
 import { Payload } from "@models/authmodel";
 import { Booking, Place } from "@models/bookings";
 import { useRouter } from "next/navigation";
@@ -49,6 +49,11 @@ export default function BookComponent({ payload, places }: BookProps) {
     try {
       console.log(bookingdata);
       let createdBooking = await CreateBooking(bookingdata);
+      try {
+        await joinBooking(createdBooking.id, payload.id);
+      } catch (e) {
+        console.log("Error joining booking");
+      }
       //redirect to validation page
       router.push("/book/" + createdBooking.id);
     } catch (error) {

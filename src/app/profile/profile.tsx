@@ -14,6 +14,7 @@ import {
 import { Account, Payload } from "@models/authmodel";
 import { Booking, Place } from "@models/bookings";
 import { Reservation } from "@models/reservation";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
 interface ProfileProps {
@@ -75,6 +76,16 @@ export default function ProfileComponent({
             <ShieldCheckIcon className="h-6 w-6" />
             <span className="text-lg">Security</span>
           </a>
+        </li>
+        <li
+          className={
+            "bg-light rounded-tr-md text-black transition-colors duration-200 hover:bg-gray-400"
+          }
+          onClick={() => setSelectedTab(3)}
+        >
+          <Link href={"/"}>
+            <span className="text-lg"> Home</span>
+          </Link>
         </li>
       </ul>
       <div className="bg-dark flex w-1/2 justify-center rounded-md p-5 text-white">
