@@ -1,15 +1,15 @@
 "use client";
-import { joinBooking } from "@/lib/bookdb";
+import { joinBooking, leaveBooking } from "@/lib/bookdb";
 import { Payload } from "@models/authmodel";
 import { Booking, Place } from "@models/bookings";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
 interface BookingInfoProps {
   booking: Booking;
   place?: Place;
   payload?: Payload;
-  booking_participants?: Number;
-  isUserParticipant?: boolean;
+  booking_participants?: any[];
 }
 
 export default function BookingInfoComponent({
@@ -17,8 +17,25 @@ export default function BookingInfoComponent({
   booking,
   payload,
   booking_participants,
-  isUserParticipant,
 }: BookingInfoProps) {
+  const [isUserParticipant, setIsUserParticipant] = useState(false);
+  const [participantSize, setParticipantSize] = useState(0);
+
+  useEffect(() => {
+    if (booking_participants) {
+      setParticipantSize(booking_participants.length);
+
+      const isParticipant =
+        payload && payload.id
+          ? booking_participants.some(
+              (participant) => participant.user_id === payload.id,
+            )
+          : false;
+
+      setIsUserParticipant(isParticipant);
+    }
+  }, [booking_participants, payload]);
+
   const handleJoinBooking = async (id: string, user_id: string) => {
     try {
       await joinBooking(id, user_id);
@@ -26,6 +43,16 @@ export default function BookingInfoComponent({
       window.location.reload();
     } catch (error) {
       console.error("Error joining booking:", error);
+    }
+  };
+
+  const handleLeaveBooking = async (id: string, user_id: string) => {
+    try {
+      await leaveBooking(id, user_id);
+      console.log("Left booking successfully");
+      window.location.reload();
+    } catch (error) {
+      console.error("Error leaving booking:", error);
     }
   };
 
@@ -119,8 +146,8 @@ export default function BookingInfoComponent({
                     </h2>
                     <div className="flex items-center">
                       <span className="text-main text-xl font-bold">
-                        {booking_participants
-                          ? `${booking_participants}/${booking.players}`
+                        {participantSize
+                          ? `${participantSize}/${booking.players}`
                           : booking.players}
                       </span>
                       <svg
@@ -147,12 +174,16 @@ export default function BookingInfoComponent({
                 payload.id != booking.user_id ? (
                   isUserParticipant ? (
                     <button
-                      className="flex w-full cursor-not-allowed items-center justify-center space-x-2 rounded-lg bg-green-500 py-4 font-medium text-white shadow-md"
-                      disabled
+                      className="flex w-full items-center justify-center space-x-2 rounded-lg bg-red-500 py-4 font-medium text-white shadow-md transition duration-300 hover:bg-red-600 hover:shadow-lg"
+                      onClick={() => {
+                        if (booking && booking.id) {
+                          handleLeaveBooking(booking.id, payload.id);
+                        }
+                      }}
                     >
-                      <span>Already Joined</span>
+                      <span>Leave Booking</span>
                     </button>
-                  ) : booking_participants === booking.players ? (
+                  ) : participantSize === booking.players ? (
                     <button
                       className="flex w-full cursor-not-allowed items-center justify-center space-x-2 rounded-lg bg-gray-400 py-4 font-medium text-white shadow-md"
                       disabled
@@ -165,7 +196,7 @@ export default function BookingInfoComponent({
                       onClick={() => {
                         if (booking && booking.id) {
                           handleJoinBooking(booking.id, payload.id);
-                        } else {
+                        } else if (!booking || !booking.id) {
                           console.error("Booking ID is undefined");
                         }
                       }}

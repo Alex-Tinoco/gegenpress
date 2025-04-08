@@ -85,6 +85,24 @@ export async function getPlaceById(id: number) {
   }
 }
 
+export async function getAllBookings() {
+  try {
+    return await prisma.bookings.findMany();
+  } catch (error) {
+    console.error("Error fetching all bookings", error);
+    throw error;
+  }
+}
+
+export async function getAllUsers() {
+  try {
+    return await prisma.users.findMany();
+  } catch (error) {
+    console.error("Error fetching all bookings", error);
+    throw error;
+  }
+}
+
 export async function getBookingParticipants(id: string): Promise<any[]> {
   try {
     return await prisma.bookings_participants.findMany({
@@ -108,6 +126,20 @@ export async function joinBooking(id: string, user_id: string) {
     });
   } catch (error) {
     console.error("Error joining booking:", error);
+    throw error;
+  }
+}
+
+export async function leaveBooking(booking_id: string, user_id: string) {
+  try {
+    return await prisma.bookings_participants.deleteMany({
+      where: {
+        booking_id: booking_id,
+        user_id: user_id,
+      },
+    });
+  } catch (error) {
+    console.error("Error leaving booking:", error);
     throw error;
   }
 }

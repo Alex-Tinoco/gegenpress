@@ -69,6 +69,15 @@ export async function middleware(req: NextRequest) {
     return NextResponse.next();
   }
 
+  if (pathname === "/admin" && payload) {
+    console.log(pathname, payload);
+    if (payload && (payload as any)["role"] === "admin") {
+      return NextResponse.next();
+    } else {
+      return redirect("/", payload);
+    }
+  }
+
   if (pathname === "/auth" && payload) {
     console.log("Already logged in, redirecting to home page.");
     return redirect("/", payload);
