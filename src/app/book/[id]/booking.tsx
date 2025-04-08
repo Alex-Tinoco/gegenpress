@@ -2,6 +2,7 @@
 import { joinBooking } from "@/lib/bookdb";
 import { Payload } from "@models/authmodel";
 import { Booking, Place } from "@models/bookings";
+import Link from "next/link";
 
 interface BookingInfoProps {
   booking: Booking;
@@ -181,6 +182,9 @@ export default function BookingInfoComponent({
             </div>
           </div>
         </div>
+        <Link href={"/"}>
+          <button className="btn-primary bg-main w-1/4">Go to home page</button>
+        </Link>
       </div>
     </div>
   );
