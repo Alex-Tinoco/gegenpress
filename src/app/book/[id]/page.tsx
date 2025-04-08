@@ -16,9 +16,10 @@ export default async function BookingInfoPage({
 }: {
   params: { id: string };
 }) {
+  const id = (await params).id;
   let booking: Booking | undefined = undefined;
   try {
-    booking = await getBookingById(params.id);
+    booking = await getBookingById(id);
     if (!booking) {
       redirect("/");
     }
@@ -45,9 +46,17 @@ export default async function BookingInfoPage({
     console.error("Error fetching place:", error);
   }
 
-  let booking_participants: number | undefined = undefined;
+  let members: any[] = [];
+  let booking_participants: number = 0;
+  let isUserParticipant: boolean = false;
+
   if (booking.id) {
-    booking_participants = (await getBookingParticipants(booking.id)).length;
+    members = await getBookingParticipants(booking.id);
+    booking_participants = members.length;
+    isUserParticipant =
+      payload && payload.id
+        ? members.some((member) => member.user_id === payload.id)
+        : false;
   }
 
   return (
@@ -57,6 +66,7 @@ export default async function BookingInfoPage({
         booking={booking}
         payload={payload}
         booking_participants={booking_participants}
+        isUserParticipant={isUserParticipant}
       />
     </div>
   );

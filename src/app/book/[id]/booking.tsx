@@ -9,6 +9,7 @@ interface BookingInfoProps {
   place?: Place;
   payload?: Payload;
   booking_participants?: Number;
+  isUserParticipant?: boolean;
 }
 
 export default function BookingInfoComponent({
@@ -16,6 +17,7 @@ export default function BookingInfoComponent({
   booking,
   payload,
   booking_participants,
+  isUserParticipant,
 }: BookingInfoProps) {
   const handleJoinBooking = async (id: string, user_id: string) => {
     try {
@@ -143,7 +145,14 @@ export default function BookingInfoComponent({
               </div>
               {payload ? (
                 payload.id != booking.user_id ? (
-                  booking_participants === booking.players ? (
+                  isUserParticipant ? (
+                    <button
+                      className="flex w-full cursor-not-allowed items-center justify-center space-x-2 rounded-lg bg-green-500 py-4 font-medium text-white shadow-md"
+                      disabled
+                    >
+                      <span>Already Joined</span>
+                    </button>
+                  ) : booking_participants === booking.players ? (
                     <button
                       className="flex w-full cursor-not-allowed items-center justify-center space-x-2 rounded-lg bg-gray-400 py-4 font-medium text-white shadow-md"
                       disabled

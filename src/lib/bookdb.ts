@@ -191,7 +191,7 @@ export async function getReservationParticipants(id: string) {
   try {
     return await prisma.session_participants.findMany({
       where: {
-        reservation_id: id,
+        session_id: id,
       },
     });
   } catch (error) {

@@ -1,6 +1,6 @@
 "use client";
 import { SelectPlace } from "@/components/SelectPlace";
-import { sessionReservation } from "@/lib/bookdb";
+import { joinReservation, sessionReservation } from "@/lib/bookdb";
 import { Payload } from "@models/authmodel";
 import { Place } from "@models/bookings";
 import { Reservation } from "@models/reservation";
@@ -62,7 +62,11 @@ export default function ReserveComponent({ payload, places }: ReserveProps) {
     try {
       console.log(reservationdata);
       let createdReservation = await sessionReservation(reservationdata);
-      //redirect to validation page
+      try {
+        await joinReservation(createdReservation.id, payload.id);
+      } catch (e) {
+        console.log("Error joining reservation");
+      }
       router.push("/reserve/" + createdReservation.id);
     } catch (error) {
       console.error("Error creating reservation:", error);
